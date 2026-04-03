@@ -61,7 +61,7 @@ function Interactions({ targetId }) {
   return (
     <div className="w-full max-w-md bg-warm-sand/10 rounded-xl p-4 mt-4 text-parchment overflow-hidden flex flex-col max-h-[300px]">
       <div className="flex items-center gap-4 mb-4">
-        <button onClick={handleLike} className={`flex items-center gap-1.5 transition-colors ${hasLiked ? "text-dusty-pink" : "text-parchment/70 hover:text-parchment"}`}>
+        <button onClick={handleLike} className={`flex items-center gap-1.5 transition-colors ${hasLiked ? "text-dusty-pink" : "text-white/70 hover:text-white"}`}>
           <svg className="w-5 h-5" fill={hasLiked ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
           <span className="text-sm">{likes}</span>
         </button>
@@ -72,21 +72,34 @@ function Interactions({ targetId }) {
             <div className="flex justify-between items-center mb-1">
               <span className="font-medium text-amber-gold text-xs">{c.authorName}</span>
             </div>
-            <p className="text-sm text-parchment/90">{c.text}</p>
+            <p className="text-sm text-white/90">{c.text}</p>
           </div>
         ))}
-        {comments.length === 0 && <p className="text-xs text-parchment/50 italic text-center">No comments yet. Be the first!</p>}
+        {comments.length === 0 && <p className="text-xs text-white/50 italic text-center">No comments yet. Be the first!</p>}
       </div>
       <form onSubmit={handleComment} className="flex gap-2">
-        <input value={newComment} onChange={e => setNewComment(e.target.value)} placeholder="Add a comment..." className="flex-1 bg-warm-sand/30 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-amber-gold border-none text-parchment placeholder:text-parchment/50" />
+        <input value={newComment} onChange={e => setNewComment(e.target.value)} placeholder="Add a comment..." className="flex-1 bg-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-amber-gold border-none text-white placeholder:text-white/50" />
         <button type="submit" disabled={!newComment.trim()} className="px-3 py-2 bg-amber-gold/20 text-amber-gold rounded-lg text-sm font-medium hover:bg-amber-gold/30 disabled:opacity-50">Post</button>
       </form>
     </div>
   );
 }
 
-function Lightbox({ item, onClose }) {
+function Lightbox({ item, media, onNavigate, onClose }) {
   if (!item) return null;
+  const currentIndex = media.findIndex(m => m._id === item._id);
+  const hasPrev = currentIndex > 0;
+  const hasNext = currentIndex < media.length - 1;
+
+  const handlePrev = (e) => {
+    e.stopPropagation();
+    if (hasPrev) onNavigate(media[currentIndex - 1]);
+  };
+  const handleNext = (e) => {
+    e.stopPropagation();
+    if (hasNext) onNavigate(media[currentIndex + 1]);
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -98,6 +111,17 @@ function Lightbox({ item, onClose }) {
       <button onClick={onClose} className="absolute top-4 right-4 text-white/80 hover:text-white z-50">
         <X size={28} />
       </button>
+
+      {hasPrev && (
+        <button onClick={handlePrev} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white z-50 p-2 bg-black/50 rounded-full hover:bg-black/80 transition-all">
+          <ChevronLeft size={32} />
+        </button>
+      )}
+      {hasNext && (
+        <button onClick={handleNext} className="absolute right-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white z-50 p-2 bg-black/50 rounded-full hover:bg-black/80 transition-all">
+          <ChevronRight size={32} />
+        </button>
+      )}
       
       <div className="flex-1 flex items-center justify-center w-full max-h-[85vh]">
         {item.type === "video" ? (
@@ -224,7 +248,14 @@ export default function GalleryPage() {
       <Footer />
 
       <AnimatePresence>
-        {lightboxItem && <Lightbox item={lightboxItem} onClose={() => setLightboxItem(null)} />}
+        {lightboxItem && (
+          <Lightbox 
+            item={lightboxItem} 
+            media={media} 
+            onNavigate={setLightboxItem} 
+            onClose={() => setLightboxItem(null)} 
+          />
+        )}
       </AnimatePresence>
     </>
   );

@@ -105,7 +105,7 @@ function ThisDayWidget() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 1.8 }}
-      className="mt-6 bg-warm-sand/40 backdrop-blur rounded-xl px-6 py-3 max-w-md text-center border border-amber-gold/20"
+      className="mt-6 bg-parchment/80 dark:bg-warm-sand/30 backdrop-blur rounded-xl px-6 py-3 max-w-md text-center border border-amber-gold/20"
     >
       <p className="text-xs text-deep-amber font-medium uppercase tracking-wider mb-1">
         📅 This Day in AIDS History
@@ -115,6 +115,50 @@ function ThisDayWidget() {
         {new Date(event.date).getFullYear()}
       </p>
     </motion.div>
+  );
+}
+
+/* ── vault highlights carousel ── */
+function VaultHighlights() {
+  const [media, setMedia] = useState([]);
+  
+  useEffect(() => {
+    fetch("/api/gallery")
+      .then(r => r.json())
+      .then(data => {
+        const images = data.filter(d => d.type === "image" || d.thumbnail);
+        const sorted = images.sort((a,b) => (b.likesCount||0) - (a.likesCount||0));
+        setMedia(sorted.slice(0, 8));
+      }).catch(() => {});
+  }, []);
+
+  if (media.length === 0) return null;
+
+  return (
+    <section className="py-20 relative overflow-hidden bg-warm-sand/5">
+      <div className="max-w-7xl mx-auto px-4 mb-10">
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+          <h2 className="font-serif text-3xl md:text-4xl text-center text-deep-navy">Vault Highlights</h2>
+          <p className="text-center text-deep-navy/60 mt-2">Most loved memories from the gallery.</p>
+        </motion.div>
+      </div>
+      
+      <div className="flex gap-4 overflow-x-auto pb-8 snap-x snap-mandatory px-4 md:px-20 scrollbar-thin">
+        {media.map((item) => (
+          <Link href="/gallery" key={item._id} className="min-w-[280px] md:min-w-[340px] h-[450px] snap-center shrink-0 relative rounded-2xl overflow-hidden group shadow-lg border border-warm-sand/50">
+            <img src={item.thumbnail || item.url} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent p-6 flex flex-col justify-end">
+              {item.eventName && <p className="text-amber-gold text-xs font-bold uppercase tracking-wider mb-1">{item.eventName}</p>}
+              <p className="text-white/90 text-sm line-clamp-2">{item.caption || "A beautiful memory"}</p>
+              <div className="flex items-center gap-1 mt-3">
+                 <svg className="w-4 h-4 text-dusty-pink fill-dusty-pink" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" stroke="currentColor" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                 <span className="text-xs text-white border-l border-white/20 pl-2 ml-1">{item.likesCount || 0} Likes</span>
+              </div>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </section>
   );
 }
 
@@ -188,6 +232,8 @@ export default function HomePage() {
           </motion.div>
         </section>
 
+        <VaultHighlights />
+
         {/* Quick links grid */}
         <section className="max-w-6xl mx-auto px-4 py-20">
           <motion.h2
@@ -206,8 +252,7 @@ export default function HomePage() {
               { href: "/yearbook", label: "Yearbook", emoji: "📖", color: "bg-sticky-lavender" },
               { href: "/messages", label: "Messages", emoji: "💌", color: "bg-sticky-lemon" },
               { href: "/hall-of-fame", label: "Hall of Fame", emoji: "🏆", color: "bg-sticky-peach" },
-              { href: "/archive", label: "Archive", emoji: "🗂️", color: "bg-warm-sand" },
-              { href: "/admin", label: "Admin", emoji: "🔐", color: "bg-blush-rose" },
+              { href: "/admin", label: "Admin", emoji: "🔐", color: "bg-archive-navy/10" },
             ].map((item, i) => (
               <motion.div
                 key={item.href}

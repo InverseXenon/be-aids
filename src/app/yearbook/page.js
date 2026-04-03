@@ -54,11 +54,16 @@ export default function YearbookPage() {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
 
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     fetch("/api/batchmates")
       .then((r) => r.json())
-      .then(setBatchmates)
-      .catch(() => {});
+      .then(data => {
+        setBatchmates(data);
+        setIsLoading(false);
+      })
+      .catch(() => { setIsLoading(false); });
   }, []);
 
   return (
@@ -76,7 +81,11 @@ export default function YearbookPage() {
           {/* Flipbook */}
           <div className="flex justify-center mb-6">
             <div className="w-full max-w-3xl" style={{ minHeight: "500px" }}>
-              {typeof window !== "undefined" && (
+              {isLoading ? (
+                <div className="w-full h-full flex items-center justify-center min-h-[500px]">
+                  <p className="text-deep-navy/40 animate-pulse font-handwriting text-2xl">Publishing the yearbook...</p>
+                </div>
+              ) : (typeof window !== "undefined" && (
                 <HTMLFlipBook
                   ref={bookRef}
                   width={400}
@@ -167,7 +176,7 @@ export default function YearbookPage() {
                   {/* Back Cover */}
                   <Page><BackCover /></Page>
                 </HTMLFlipBook>
-              )}
+              ))}
             </div>
           </div>
 

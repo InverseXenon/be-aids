@@ -23,63 +23,82 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 
 function ProfileCard({ batchmate, index }) {
+  const [isFlipped, setIsFlipped] = useState(false);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay: index * 0.03, duration: 0.5 }}
-      className="group relative bg-warm-sand/30 rounded-2xl overflow-hidden border border-warm-sand/50 hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+      className="group relative h-80 cursor-pointer [perspective:1000px]"
+      onMouseEnter={() => setIsFlipped(true)}
+      onMouseLeave={() => setIsFlipped(false)}
+      onClick={() => setIsFlipped(!isFlipped)}
     >
-      {/* Photo */}
-      <div className="aspect-[3/4] bg-warm-sand/50 overflow-hidden">
-        {batchmate.photo?.url ? (
-          <img
-            src={batchmate.photo.url}
-            alt={batchmate.name}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-4xl text-deep-navy/20">
-            {batchmate.name?.[0] || "?"}
+      <motion.div 
+        className="w-full h-full relative [transform-style:preserve-3d] transition-transform duration-500 ease-out shadow-md hover:shadow-xl rounded-sm"
+        animate={{ rotateY: isFlipped ? 180 : (Math.random() * 4 - 2) }}
+        whileHover={{ scale: 1.05, rotateY: 180 }}
+      >
+        {/* Front of Polaroid */}
+        <div className="absolute inset-0 [backface-visibility:hidden] bg-[#f8f5f0] dark:bg-[#1c1a18] p-3 pb-16 border border-warm-sand/50 rounded-sm flex flex-col">
+          <div className="flex-1 bg-warm-sand/50 overflow-hidden relative shadow-inner">
+            {batchmate.photo?.url ? (
+              <img
+                src={batchmate.photo.url}
+                alt={batchmate.name}
+                className="w-full h-full object-cover filter contrast-110 saturate-[0.8]"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-4xl text-deep-navy/20">
+                {batchmate.name?.[0] || "?"}
+              </div>
+            )}
+            {batchmate.superlativeTitle && (
+              <div className="absolute bottom-2 right-2 bg-black/50 backdrop-blur-md rounded-full w-8 h-8 flex items-center justify-center text-amber-gold" title={batchmate.superlativeTitle}>
+                🏆
+              </div>
+            )}
           </div>
-        )}
-      </div>
-
-      {/* Info */}
-      <div className="p-4">
-        <h3 className="font-serif text-base font-semibold text-deep-navy truncate">
-          {batchmate.name}
-        </h3>
-        {batchmate.quote && (
-          <p className="font-handwriting text-sm text-deep-navy/50 mt-1 line-clamp-2 italic">
-            &ldquo;{batchmate.quote}&rdquo;
-          </p>
-        )}
-        {/* Social links */}
-        <div className="flex gap-2 mt-3">
-          {batchmate.linkedin && (
-            <a href={batchmate.linkedin} target="_blank" rel="noopener noreferrer" className="text-archive-navy/50 hover:text-archive-navy transition-colors">
-              <Linkedin size={16} />
-            </a>
-          )}
-          {batchmate.instagram && (
-            <a href={batchmate.instagram} target="_blank" rel="noopener noreferrer" className="text-dusty-pink/50 hover:text-dusty-pink transition-colors">
-              <Instagram size={16} />
-            </a>
-          )}
-        </div>
-      </div>
-
-      {/* Superlative hover overlay */}
-      {batchmate.superlativeTitle && (
-        <div className="absolute inset-0 bg-deep-navy/80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-          <div className="text-center px-4">
-            <p className="text-amber-gold text-sm font-medium mb-1">🏆</p>
-            <p className="font-handwriting text-xl text-parchment">{batchmate.superlativeTitle}</p>
+          <div className="absolute bottom-0 left-0 right-0 h-16 flex items-center justify-center pointer-events-none">
+            <h3 className="font-handwriting text-2xl text-deep-navy/80 truncate px-4">{batchmate.name}</h3>
           </div>
         </div>
-      )}
+
+        {/* Back of Polaroid */}
+        <div 
+          className="absolute inset-0 [backface-visibility:hidden] bg-[#f8f5f0] dark:bg-[#1c1a18] p-5 border border-warm-sand/50 rounded-sm flex flex-col items-center justify-center text-center" 
+          style={{ transform: "rotateY(180deg)" }}
+        >
+          <h3 className="font-serif text-xl font-bold text-deep-navy mb-1">{batchmate.name}</h3>
+          {batchmate.superlativeTitle && (
+            <p className="text-amber-gold text-xs font-semibold uppercase tracking-widest mb-3 border-b border-amber-gold/20 pb-2">
+              {batchmate.superlativeTitle}
+            </p>
+          )}
+          {batchmate.quote ? (
+            <p className="font-handwriting text-lg text-deep-navy/70 mb-4 line-clamp-4 italic">
+              "{batchmate.quote}"
+            </p>
+          ) : (
+            <p className="text-sm text-deep-navy/40 italic mb-4">No quote added.</p>
+          )}
+          
+          <div className="flex gap-4 mt-auto">
+            {batchmate.linkedin && (
+              <a href={batchmate.linkedin} target="_blank" rel="noopener noreferrer" className="p-2 bg-archive-navy/10 text-archive-navy rounded-full hover:bg-archive-navy/20 transition-colors">
+                <Linkedin size={18} />
+              </a>
+            )}
+            {batchmate.instagram && (
+              <a href={batchmate.instagram} target="_blank" rel="noopener noreferrer" className="p-2 bg-dusty-pink/10 text-dusty-pink rounded-full hover:bg-dusty-pink/20 transition-colors">
+                <Instagram size={18} />
+              </a>
+            )}
+          </div>
+        </div>
+      </motion.div>
     </motion.div>
   );
 }
