@@ -4,6 +4,87 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Search, X, ChevronLeft, ChevronRight, Play } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import { getSessionId, getUserName, setUserName } from "@/lib/session";
+import { formatDistanceToNow } from "date-fns";
+
+function Interactions({ targetId }) {
+  const [likes, setLikes] = useState(0);
+  const [comments, setComments] = useState([]);
+  const [hasLiked, setHasLiked] = useState(false);
+  const [newComment, setNewComment] = useState("");
+  const [name, setName] = useState("");
+
+  useEffect(() => {
+    setName(getUserName());
+    fetch(`/api/interactions?targetId=${targetId}`)
+      .then(r => r.json())
+      .then(data => {
+        setLikes(data.likesCount || 0);
+        setComments(data.comments || []);
+      }).catch(() => {});
+  }, [targetId]);
+
+  const handleLike = async () => {
+    const sessionId = getSessionId();
+    const res = await fetch("/api/interactions", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "like", targetId, sessionId })
+    });
+    if (res.ok) {
+      const data = await res.json();
+      setLikes(data.likesCount);
+      setHasLiked(data.action === "liked");
+    }
+  };
+
+  const handleComment = async (e) => {
+    e.preventDefault();
+    if (!newComment.trim()) return;
+    let authorName = name.trim();
+    if (!authorName) {
+      authorName = prompt("Enter your display name for comments:");
+      if (!authorName) return;
+      setUserName(authorName);
+      setName(authorName);
+    }
+    
+    const res = await fetch("/api/interactions", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "comment", targetId, text: newComment, authorName })
+    });
+    if (res.ok) {
+      const added = await res.json();
+      setComments([added, ...comments]);
+      setNewComment("");
+    }
+  };
+
+  return (
+    <div className="w-full max-w-md bg-warm-sand/10 rounded-xl p-4 mt-4 text-parchment overflow-hidden flex flex-col max-h-[300px]">
+      <div className="flex items-center gap-4 mb-4">
+        <button onClick={handleLike} className={`flex items-center gap-1.5 transition-colors ${hasLiked ? "text-dusty-pink" : "text-parchment/70 hover:text-parchment"}`}>
+          <svg className="w-5 h-5" fill={hasLiked ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+          <span className="text-sm">{likes}</span>
+        </button>
+      </div>
+      <div className="flex-1 overflow-y-auto space-y-3 mb-3 pr-2 scrollbar-thin">
+        {comments.map(c => (
+          <div key={c._id} className="bg-white/5 rounded-lg p-2.5">
+            <div className="flex justify-between items-center mb-1">
+              <span className="font-medium text-amber-gold text-xs">{c.authorName}</span>
+            </div>
+            <p className="text-sm text-parchment/90">{c.text}</p>
+          </div>
+        ))}
+        {comments.length === 0 && <p className="text-xs text-parchment/50 italic text-center">No comments yet. Be the first!</p>}
+      </div>
+      <form onSubmit={handleComment} className="flex gap-2">
+        <input value={newComment} onChange={e => setNewComment(e.target.value)} placeholder="Add a comment..." className="flex-1 bg-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-amber-gold border-none text-parchment placeholder:text-parchment/50" />
+        <button type="submit" disabled={!newComment.trim()} className="px-3 py-2 bg-amber-gold/20 text-amber-gold rounded-lg text-sm font-medium hover:bg-amber-gold/30 disabled:opacity-50">Post</button>
+      </form>
+    </div>
+  );
+}
 
 function Lightbox({ item, onClose }) {
   if (!item) return null;
@@ -12,23 +93,31 @@ function Lightbox({ item, onClose }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 bg-black/95 flex md:flex-row flex-col items-center justify-center p-4 gap-6"
       onClick={onClose}
     >
-      <button onClick={onClose} className="absolute top-4 right-4 text-white/80 hover:text-white">
+      <button onClick={onClose} className="absolute top-4 right-4 text-white/80 hover:text-white z-50">
         <X size={28} />
       </button>
-      {item.type === "video" ? (
-        <iframe
-          src={item.url.replace("watch?v=", "embed/")}
-          className="w-full max-w-4xl aspect-video rounded-lg"
-          allowFullScreen
-          onClick={(e) => e.stopPropagation()}
-        />
-      ) : (
-        <img src={item.url} alt={item.caption || ""} className="max-h-[85vh] max-w-[90vw] object-contain rounded-lg" onClick={(e) => e.stopPropagation()} />
-      )}
-      {item.caption && <p className="absolute bottom-6 text-white/60 text-sm">{item.caption}</p>}
+      
+      <div className="flex-1 flex items-center justify-center w-full max-h-[85vh]">
+        {item.type === "video" ? (
+          <iframe
+            src={item.url.replace("watch?v=", "embed/")}
+            className="w-full max-w-4xl aspect-video rounded-lg"
+            allowFullScreen
+            onClick={(e) => e.stopPropagation()}
+          />
+        ) : (
+          <img src={item.url} alt={item.caption || ""} className="max-h-full max-w-full object-contain rounded-lg shadow-2xl" onClick={(e) => e.stopPropagation()} />
+        )}
+      </div>
+
+      <div className="w-full md:w-80 lg:w-96 flex flex-col max-h-[85vh]" onClick={e => e.stopPropagation()}>
+        {item.caption && <p className="text-white/80 text-sm mb-4 bg-white/5 p-4 rounded-xl">{item.caption}</p>}
+        {item.eventName && <p className="text-amber-gold text-xs font-bold uppercase tracking-wider mb-2">{item.eventName}</p>}
+        <Interactions targetId={item._id} />
+      </div>
     </motion.div>
   );
 }

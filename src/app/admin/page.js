@@ -15,7 +15,6 @@ const sections = [
   { href: "/admin/gallery", label: "Media Vault", icon: Image, color: "bg-sticky-mint", desc: "Upload photos & videos" },
   { href: "/admin/messages", label: "Messages", icon: MessageSquare, color: "bg-sticky-lemon", desc: "Moderate sticky notes" },
   { href: "/admin/hall-of-fame", label: "Hall of Fame", icon: Trophy, color: "bg-sticky-peach", desc: "Manage voting categories" },
-  { href: "/admin/archive", label: "Archive", icon: FolderOpen, color: "bg-sticky-lavender", desc: "Upload documents" },
 ];
 
 export default function AdminDashboard() {
