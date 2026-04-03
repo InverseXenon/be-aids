@@ -93,8 +93,12 @@ export default function AdminTimeline() {
             {form.photos.length > 0 && (
               <div className="flex gap-2 flex-wrap mt-3">
                 {form.photos.map((p, i) => (
-                  <div key={i} className="relative w-16 h-16 rounded-md overflow-hidden group">
-                    <img src={p.url} alt="" className="w-full h-full object-cover" />
+                  <div key={i} className="relative w-16 h-16 rounded-md overflow-hidden group bg-black/10">
+                    {(p.url.includes('/video/') || p.url.match(/\.(mp4|webm|ogg)$/i)) ? (
+                      <video src={p.url} className="w-full h-full object-cover" />
+                    ) : (
+                      <img src={p.url} alt="" className="w-full h-full object-cover" />
+                    )}
                     <button onClick={() => setForm({...form, photos: form.photos.filter((_, idx) => idx !== i)})} className="absolute top-1 right-1 p-1 bg-black/50 hover:bg-red-500 rounded text-white opacity-0 group-hover:opacity-100 transition-opacity"><X size={12}/></button>
                   </div>
                 ))}

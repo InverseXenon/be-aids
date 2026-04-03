@@ -67,6 +67,12 @@ export async function PUT(request) {
   await dbConnect();
   const data = await request.json();
   const { _id, ...updateData } = data;
+  
+  if (!_id) {
+    const newCategory = await SuperlativeCategory.create(updateData);
+    return NextResponse.json(newCategory, { status: 201 });
+  }
+
   const category = await SuperlativeCategory.findByIdAndUpdate(_id, updateData, { new: true });
   return NextResponse.json(category);
 }

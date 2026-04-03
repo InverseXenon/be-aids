@@ -23,15 +23,6 @@ export default function AdminHallOfFame() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ ...newCat, isOpen: true }),
     });
-    // Actually we need POST for creating — let me use the category model directly
-    // For simplicity, we'll create via a workaround: use PUT with no _id to trigger create
-    // Actually, let's add a proper POST handler. For now let's just use the route:
-    const res = await fetch("/api/superlatives", {
-      method: "POST",  // This is the vote endpoint, so let's use PUT for admin
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ categoryId: "new", batchmateId: "new", sessionId: "admin" }),
-    });
-    // Better approach: direct DB insert via a separate admin endpoint
     loadData();
     setNewCat({ name: "", emoji: "🏆" });
   };
@@ -62,9 +53,26 @@ export default function AdminHallOfFame() {
         </div>
       </header>
       <main className="max-w-4xl mx-auto px-4 py-8">
-        <p className="text-sm text-deep-navy/50 mb-6">
-          Use the MongoDB shell or a tool like MongoDB Compass to create categories directly. Toggle voting open/close here.
-        </p>
+        <div className="bg-warm-sand/20 rounded-2xl p-6 border border-warm-sand/50 mb-8">
+          <h2 className="font-serif text-lg text-deep-navy mb-4">Add New Category</h2>
+          <div className="flex gap-4 items-center">
+            <input 
+              placeholder="Emoji (e.g. 🏆)" 
+              value={newCat.emoji} 
+              onChange={(e) => setNewCat({ ...newCat, emoji: e.target.value })}
+              className="w-20 px-4 py-2.5 rounded-xl border border-warm-sand bg-white/50 text-deep-navy focus:outline-none focus:ring-2 focus:ring-amber-gold/30 text-center" 
+            />
+            <input 
+              placeholder="Category Name (e.g. Most Likely to...)" 
+              value={newCat.name} 
+              onChange={(e) => setNewCat({ ...newCat, name: e.target.value })}
+              className="flex-1 px-4 py-2.5 rounded-xl border border-warm-sand bg-white/50 text-deep-navy focus:outline-none focus:ring-2 focus:ring-amber-gold/30" 
+            />
+            <button onClick={handleAdd} className="flex items-center gap-2 px-5 py-3 bg-deep-navy text-parchment rounded-xl text-sm hover:bg-archive-navy transition-colors">
+              <Plus size={16} /> Add
+            </button>
+          </div>
+        </div>
 
         <div className="space-y-3">
           {categories.map((cat) => (

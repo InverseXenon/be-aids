@@ -37,12 +37,22 @@ function Lightbox({ photos, index, onClose, onNav }) {
           </button>
         </>
       )}
-      <img
-        src={photos[index]?.url}
-        alt=""
-        className="max-h-[85vh] max-w-[90vw] object-contain rounded-lg"
-        onClick={(e) => e.stopPropagation()}
-      />
+      {(photos[index]?.url.includes('/video/') || photos[index]?.url.match(/\.(mp4|webm|ogg)$/i)) ? (
+        <video
+          src={photos[index]?.url}
+          className="max-h-[85vh] max-w-[90vw] object-contain rounded-lg"
+          controls
+          autoPlay
+          onClick={(e) => e.stopPropagation()}
+        />
+      ) : (
+        <img
+          src={photos[index]?.url}
+          alt=""
+          className="max-h-[85vh] max-w-[90vw] object-contain rounded-lg"
+          onClick={(e) => e.stopPropagation()}
+        />
+      )}
       <p className="absolute bottom-4 text-white/50 text-sm">
         {index + 1} / {photos.length}
       </p>
@@ -88,9 +98,20 @@ function EventCard({ event, side }) {
                 <button
                   key={i}
                   onClick={() => setLightboxIndex(i)}
-                  className="w-16 h-16 rounded-lg overflow-hidden border-2 border-white/50 hover:border-amber-gold transition-colors"
+                  className="w-16 h-16 rounded-lg overflow-hidden border-2 border-white/50 hover:border-amber-gold transition-colors relative bg-black/10"
                 >
-                  <img src={photo.url} alt="" className="w-full h-full object-cover" />
+                  {(photo.url.includes('/video/') || photo.url.match(/\.(mp4|webm|ogg)$/i)) ? (
+                    <>
+                      <video src={photo.url} className="w-full h-full object-cover" />
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                        <div className="w-6 h-6 rounded-full bg-white/80 flex items-center justify-center pl-0.5">
+                          <svg viewBox="0 0 24 24" fill="currentColor" className="w-3 h-3 text-deep-navy"><path d="M8 5v14l11-7z"/></svg>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <img src={photo.url} alt="" className="w-full h-full object-cover" />
+                  )}
                 </button>
               ))}
               {event.photos.length > 4 && (

@@ -53,7 +53,7 @@ export default function Footer() {
 
         <div className="border-t border-parchment/10 mt-8 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-parchment/40 flex items-center gap-1">
-            Made with <Heart className="w-3 h-3 text-dusty-pink fill-dusty-pink" /> by Batch &apos;26
+            Made with <Heart className="w-3 h-3 text-dusty-pink fill-dusty-pink" /> by Piyush Patil
           </p>
           <p className="text-xs text-parchment/40">
             © VESIT AIDS &apos;26. All memories preserved.

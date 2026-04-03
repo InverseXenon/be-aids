@@ -31,7 +31,7 @@ export default function CloudinaryUploadWidget({ onUploadSuccess }) {
       <Upload size={14} /> {uploading ? "Uploading..." : "Select File"}
       <input 
         type="file" 
-        accept="image/*" 
+        accept="image/*,video/*" 
         onChange={handleUpload} 
         className="hidden" 
         disabled={uploading} 
