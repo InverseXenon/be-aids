@@ -1,26 +1,133 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: var(--bg);
+  --color-foreground: var(--fg);
+  --color-parchment: var(--parchment);
+  --color-warm-sand: var(--warm-sand);
+  --color-amber-gold: var(--amber-gold);
+  --color-dusty-pink: var(--dusty-pink);
+  --color-deep-navy: var(--deep-navy);
+  --color-archive-navy: var(--archive-navy);
+  --color-deep-amber: var(--deep-amber);
+  
+  --color-year1: var(--year1);
+  --color-year2: var(--year2);
+  --color-year3: var(--year3);
+  --color-year4: var(--deep-navy);
+
+  --color-sticky-lemon: var(--sticky-lemon);
+  --color-sticky-petal: var(--sticky-petal);
+  --color-sticky-mint: var(--sticky-mint);
+  --color-sticky-lavender: var(--sticky-lavender);
+  --color-sticky-peach: var(--sticky-peach);
+
+  --font-serif: var(--font-playfair);
+  --font-sans: var(--font-lato);
+  --font-handwriting: var(--font-caveat);
+
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-float-delayed: float 6s ease-in-out 3s infinite;
+  --animate-wobble: wobble 4s ease-in-out infinite;
+  --animate-fade-in: fadeIn 1s ease-out forwards;
+  --animate-slide-up: slideUp 0.8s ease-out forwards;
 }
 
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --bg: #FDFBF7;
+    --fg: #1F2937;
+    --parchment: #FDFBF7;
+    --warm-sand: #EAE3D2;
+    --amber-gold: #D29A5A;
+    --dusty-pink: #C88E91;
+    --deep-navy: #1F2937;
+    --archive-navy: #1E3A8A;
+    --deep-amber: #B45309;
+    
+    --year1: #FDE68A;
+    --year2: #FECDD3;
+    --year3: #A7F3D0;
+
+    --sticky-lemon: #FEF08A;
+    --sticky-petal: #FBCFE8;
+    --sticky-mint: #BAE6FD;
+    --sticky-lavender: #DDD6FE;
+    --sticky-peach: #FED7AA;
+  }
+
+  .dark {
+    --bg: #09090b;
+    --fg: #fafafa;
+    --parchment: #09090b;
+    --warm-sand: #27272a;
+    --amber-gold: #f59e0b;
+    --dusty-pink: #db2777;
+    --deep-navy: #f4f4f5;
+    --archive-navy: #3b82f6;
+    --deep-amber: #fcd34d;
+    
+    --year1: #854d0e;
+    --year2: #831843;
+    --year3: #065f46;
+
+    --sticky-lemon: #ca8a04;
+    --sticky-petal: #be185d;
+    --sticky-mint: #0369a1;
+    --sticky-lavender: #6d28d9;
+    --sticky-peach: #c2410c;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@keyframes float {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(2deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
 }
+
+@keyframes wobble {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), sans-serif;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif), serif;
+}
+
+.font-handwriting {
+  font-family: var(--font-handwriting), cursive;
+}
+
+.texture-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 50;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--color-parchment); }
+::-webkit-scrollbar-thumb { background: var(--color-warm-sand); border-radius: 5px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-amber-gold); }
