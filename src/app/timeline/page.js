@@ -104,7 +104,7 @@ function EventCard({ event, side }) {
                     <>
                       <video src={photo.url} className="w-full h-full object-cover" />
                       <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-                        <div className="w-6 h-6 rounded-full bg-white/80 flex items-center justify-center pl-0.5">
+                        <div className="w-6 h-6 rounded-full bg-parchment/80 dark:bg-warm-sand/30 flex items-center justify-center pl-0.5">
                           <svg viewBox="0 0 24 24" fill="currentColor" className="w-3 h-3 text-deep-navy"><path d="M8 5v14l11-7z"/></svg>
                         </div>
                       </div>

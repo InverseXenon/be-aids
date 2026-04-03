@@ -68,7 +68,7 @@ function Interactions({ targetId }) {
       </div>
       <div className="flex-1 overflow-y-auto space-y-3 mb-3 pr-2 scrollbar-thin">
         {comments.map(c => (
-          <div key={c._id} className="bg-white/5 rounded-lg p-2.5">
+          <div key={c._id} className="bg-warm-sand/20 rounded-lg p-2.5">
             <div className="flex justify-between items-center mb-1">
               <span className="font-medium text-amber-gold text-xs">{c.authorName}</span>
             </div>
@@ -78,7 +78,7 @@ function Interactions({ targetId }) {
         {comments.length === 0 && <p className="text-xs text-parchment/50 italic text-center">No comments yet. Be the first!</p>}
       </div>
       <form onSubmit={handleComment} className="flex gap-2">
-        <input value={newComment} onChange={e => setNewComment(e.target.value)} placeholder="Add a comment..." className="flex-1 bg-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-amber-gold border-none text-parchment placeholder:text-parchment/50" />
+        <input value={newComment} onChange={e => setNewComment(e.target.value)} placeholder="Add a comment..." className="flex-1 bg-warm-sand/30 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-amber-gold border-none text-parchment placeholder:text-parchment/50" />
         <button type="submit" disabled={!newComment.trim()} className="px-3 py-2 bg-amber-gold/20 text-amber-gold rounded-lg text-sm font-medium hover:bg-amber-gold/30 disabled:opacity-50">Post</button>
       </form>
     </div>
@@ -113,7 +113,7 @@ function Lightbox({ item, onClose }) {
       </div>
 
       <div className="w-full md:w-80 lg:w-96 flex flex-col max-h-[85vh]" onClick={e => e.stopPropagation()}>
-        {item.caption && <p className="text-white/80 text-sm mb-4 bg-white/5 p-4 rounded-xl">{item.caption}</p>}
+        {item.caption && <p className="text-white/80 text-sm mb-4 bg-warm-sand/20 p-4 rounded-xl">{item.caption}</p>}
         {item.eventName && <p className="text-amber-gold text-xs font-bold uppercase tracking-wider mb-2">{item.eventName}</p>}
         <Interactions targetId={item._id} />
       </div>
@@ -166,7 +166,7 @@ export default function GalleryPage() {
                 placeholder="Search events..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-9 pr-4 py-1.5 text-sm rounded-full border border-warm-sand bg-white/50 text-deep-navy placeholder:text-deep-navy/30 focus:outline-none focus:ring-2 focus:ring-amber-gold/30"
+                className="pl-9 pr-4 py-1.5 text-sm rounded-full border border-warm-sand bg-parchment/80 dark:bg-warm-sand/30 text-deep-navy placeholder:text-deep-navy/30 focus:outline-none focus:ring-2 focus:ring-amber-gold/30"
               />
             </div>
           </div>
@@ -201,6 +201,12 @@ export default function GalleryPage() {
                   {item.eventName && (
                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-3 pt-8">
                       <p className="text-white text-xs font-medium">{item.eventName}</p>
+                    </div>
+                  )}
+                  {item.likesCount > 0 && (
+                    <div className="absolute top-2 right-2 bg-black/40 backdrop-blur-md rounded-full px-2 py-1 flex items-center gap-1">
+                      <svg className="w-3 h-3 text-dusty-pink fill-dusty-pink" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" stroke="currentColor" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                      <span className="text-[10px] text-white font-medium">{item.likesCount}</span>
                     </div>
                   )}
                 </div>

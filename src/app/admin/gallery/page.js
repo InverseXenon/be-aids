@@ -84,15 +84,15 @@ export default function AdminGallery() {
           <h2 className="font-serif text-lg text-deep-navy mb-4">Upload Media</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
             <select value={form.year} onChange={(e) => setForm({ ...form, year: parseInt(e.target.value) })}
-              className="px-4 py-2.5 rounded-xl border border-warm-sand bg-white/50 text-deep-navy focus:outline-none focus:ring-2 focus:ring-amber-gold/30">
+              className="px-4 py-2.5 rounded-xl border border-warm-sand bg-parchment/80 dark:bg-warm-sand/30 text-deep-navy focus:outline-none focus:ring-2 focus:ring-amber-gold/30">
               {[1, 2, 3, 4].map((y) => <option key={y} value={y}>Year {y}</option>)}
             </select>
             <input placeholder="Event name" value={form.eventName} onChange={(e) => setForm({ ...form, eventName: e.target.value })}
-              className="px-4 py-2.5 rounded-xl border border-warm-sand bg-white/50 text-deep-navy placeholder:text-deep-navy/30 focus:outline-none focus:ring-2 focus:ring-amber-gold/30" />
+              className="px-4 py-2.5 rounded-xl border border-warm-sand bg-parchment/80 dark:bg-warm-sand/30 text-deep-navy placeholder:text-deep-navy/30 focus:outline-none focus:ring-2 focus:ring-amber-gold/30" />
             <input placeholder="Caption" value={form.caption} onChange={(e) => setForm({ ...form, caption: e.target.value })}
-              className="px-4 py-2.5 rounded-xl border border-warm-sand bg-white/50 text-deep-navy placeholder:text-deep-navy/30 focus:outline-none focus:ring-2 focus:ring-amber-gold/30" />
+              className="px-4 py-2.5 rounded-xl border border-warm-sand bg-parchment/80 dark:bg-warm-sand/30 text-deep-navy placeholder:text-deep-navy/30 focus:outline-none focus:ring-2 focus:ring-amber-gold/30" />
             <input placeholder="Tags (comma-separated)" value={form.tags} onChange={(e) => setForm({ ...form, tags: e.target.value })}
-              className="px-4 py-2.5 rounded-xl border border-warm-sand bg-white/50 text-deep-navy placeholder:text-deep-navy/30 focus:outline-none focus:ring-2 focus:ring-amber-gold/30" />
+              className="px-4 py-2.5 rounded-xl border border-warm-sand bg-parchment/80 dark:bg-warm-sand/30 text-deep-navy placeholder:text-deep-navy/30 focus:outline-none focus:ring-2 focus:ring-amber-gold/30" />
           </div>
           <div className="flex gap-3">
             <label className="flex items-center gap-2 px-5 py-2 bg-deep-navy text-parchment rounded-xl text-sm cursor-pointer hover:bg-archive-navy transition-colors">
@@ -117,7 +117,7 @@ export default function AdminGallery() {
                 className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
                 <Trash2 size={12} />
               </button>
-              <div className="p-2 bg-white/80">
+              <div className="p-2 bg-parchment/80 dark:bg-warm-sand/30">
                 <p className="text-xs text-deep-navy truncate">{m.eventName || "Untitled"}</p>
                 <p className="text-[10px] text-deep-navy/40">Year {m.year}</p>
               </div>

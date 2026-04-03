@@ -62,26 +62,26 @@ export default function AdminTimeline() {
           <h2 className="font-serif text-lg text-deep-navy mb-4">{editing ? "Edit Event" : "Add New Event"}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <input placeholder="Event title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })}
-              className="px-4 py-2.5 rounded-xl border border-warm-sand bg-white/50 text-deep-navy placeholder:text-deep-navy/30 focus:outline-none focus:ring-2 focus:ring-amber-gold/30" />
+              className="px-4 py-2.5 rounded-xl border border-warm-sand bg-parchment/80 dark:bg-warm-sand/30 text-deep-navy placeholder:text-deep-navy/30 focus:outline-none focus:ring-2 focus:ring-amber-gold/30" />
             <input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })}
-              className="px-4 py-2.5 rounded-xl border border-warm-sand bg-white/50 text-deep-navy focus:outline-none focus:ring-2 focus:ring-amber-gold/30" />
+              className="px-4 py-2.5 rounded-xl border border-warm-sand bg-parchment/80 dark:bg-warm-sand/30 text-deep-navy focus:outline-none focus:ring-2 focus:ring-amber-gold/30" />
             <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}
-              className="px-4 py-2.5 rounded-xl border border-warm-sand bg-white/50 text-deep-navy focus:outline-none focus:ring-2 focus:ring-amber-gold/30">
+              className="px-4 py-2.5 rounded-xl border border-warm-sand bg-parchment/80 dark:bg-warm-sand/30 text-deep-navy focus:outline-none focus:ring-2 focus:ring-amber-gold/30">
               {["Academics", "Cultural", "Sports", "Trips", "Hackathons", "Farewell", "Other"].map((c) => <option key={c}>{c}</option>)}
             </select>
             <div className="flex gap-2">
               <select value={form.year} onChange={(e) => setForm({ ...form, year: parseInt(e.target.value) })}
-                className="flex-1 px-4 py-2.5 rounded-xl border border-warm-sand bg-white/50 text-deep-navy focus:outline-none focus:ring-2 focus:ring-amber-gold/30">
+                className="flex-1 px-4 py-2.5 rounded-xl border border-warm-sand bg-parchment/80 dark:bg-warm-sand/30 text-deep-navy focus:outline-none focus:ring-2 focus:ring-amber-gold/30">
                 {[1, 2, 3, 4].map((y) => <option key={y} value={y}>Year {y}</option>)}
               </select>
               <select value={form.semester} onChange={(e) => setForm({ ...form, semester: parseInt(e.target.value) })}
-                className="flex-1 px-4 py-2.5 rounded-xl border border-warm-sand bg-white/50 text-deep-navy focus:outline-none focus:ring-2 focus:ring-amber-gold/30">
+                className="flex-1 px-4 py-2.5 rounded-xl border border-warm-sand bg-parchment/80 dark:bg-warm-sand/30 text-deep-navy focus:outline-none focus:ring-2 focus:ring-amber-gold/30">
                 {[1, 2, 3, 4, 5, 6, 7, 8].map((s) => <option key={s} value={s}>Sem {s}</option>)}
               </select>
             </div>
           </div>
           <textarea placeholder="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3}
-            className="w-full mt-4 px-4 py-2.5 rounded-xl border border-warm-sand bg-white/50 text-deep-navy placeholder:text-deep-navy/30 focus:outline-none focus:ring-2 focus:ring-amber-gold/30 resize-none" />
+            className="w-full mt-4 px-4 py-2.5 rounded-xl border border-warm-sand bg-parchment/80 dark:bg-warm-sand/30 text-deep-navy placeholder:text-deep-navy/30 focus:outline-none focus:ring-2 focus:ring-amber-gold/30 resize-none" />
           
           <div className="mt-4">
             <label className="block text-xs font-medium text-deep-navy/60 mb-2">Attach Event Photos (Optional)</label>
@@ -122,7 +122,7 @@ export default function AdminTimeline() {
         {/* Event list */}
         <div className="space-y-3">
           {events.map((e) => (
-            <div key={e._id} className="bg-white/50 rounded-xl p-4 border border-warm-sand/50 flex items-center justify-between">
+            <div key={e._id} className="bg-parchment/80 dark:bg-warm-sand/30 rounded-xl p-4 border border-warm-sand/50 flex items-center justify-between">
               <div>
                 <h3 className="font-medium text-deep-navy text-sm">{e.title}</h3>
                 <p className="text-xs text-deep-navy/40 mt-0.5">

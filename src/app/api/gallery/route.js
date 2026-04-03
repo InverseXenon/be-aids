@@ -4,6 +4,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import dbConnect from "@/lib/mongodb";
 import Media from "@/models/Media";
 import Event from "@/models/Event";
+import Like from "@/models/Like";
 
 export async function GET(request) {
   await dbConnect();
@@ -54,6 +55,19 @@ export async function GET(request) {
   }
 
   const merged = [...galleryItems, ...eventItems].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+  try {
+    const likesData = await Like.aggregate([{ $group: { _id: "$targetId", count: { $sum: 1 } } }]);
+    const likesMap = {};
+    likesData.forEach(l => likesMap[l._id] = l.count);
+    
+    merged.forEach(item => {
+      item.likesCount = likesMap[item._id] || 0;
+    });
+  } catch (e) {
+    console.error("Error fetching likes for gallery", e);
+  }
+
   return NextResponse.json(merged);
 }
 

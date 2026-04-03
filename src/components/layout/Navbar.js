@@ -51,6 +51,15 @@ export default function Navbar() {
             >
               Admin
             </Link>
+            {mounted && (
+              <button
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                className="ml-2 p-2 text-deep-navy/70 hover:text-amber-gold transition-colors"
+                aria-label="Toggle Dark Mode"
+              >
+                {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+              </button>
+            )}
           </div>
 
           {/* Mobile toggle */}

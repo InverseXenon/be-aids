@@ -100,7 +100,7 @@ export default function MessagesPage() {
                   placeholder="Your name"
                   value={form.author}
                   onChange={(e) => setForm({ ...form, author: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl border border-warm-sand bg-white/50 text-deep-navy placeholder:text-deep-navy/30 focus:outline-none focus:ring-2 focus:ring-amber-gold/30"
+                  className="w-full px-4 py-2.5 rounded-xl border border-warm-sand bg-parchment/80 dark:bg-warm-sand/30 text-deep-navy placeholder:text-deep-navy/30 focus:outline-none focus:ring-2 focus:ring-amber-gold/30"
                   required
                 />
                 <textarea
@@ -108,7 +108,7 @@ export default function MessagesPage() {
                   value={form.content}
                   onChange={(e) => setForm({ ...form, content: e.target.value })}
                   rows={3}
-                  className="w-full px-4 py-2.5 rounded-xl border border-warm-sand bg-white/50 text-deep-navy placeholder:text-deep-navy/30 focus:outline-none focus:ring-2 focus:ring-amber-gold/30 resize-none font-handwriting text-lg"
+                  className="w-full px-4 py-2.5 rounded-xl border border-warm-sand bg-parchment/80 dark:bg-warm-sand/30 text-deep-navy placeholder:text-deep-navy/30 focus:outline-none focus:ring-2 focus:ring-amber-gold/30 resize-none font-handwriting text-lg"
                   required
                 />
                 <div className="flex items-center gap-2">

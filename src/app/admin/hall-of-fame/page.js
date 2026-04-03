@@ -60,13 +60,13 @@ export default function AdminHallOfFame() {
               placeholder="Emoji (e.g. 🏆)" 
               value={newCat.emoji} 
               onChange={(e) => setNewCat({ ...newCat, emoji: e.target.value })}
-              className="w-20 px-4 py-2.5 rounded-xl border border-warm-sand bg-white/50 text-deep-navy focus:outline-none focus:ring-2 focus:ring-amber-gold/30 text-center" 
+              className="w-20 px-4 py-2.5 rounded-xl border border-warm-sand bg-parchment/80 dark:bg-warm-sand/30 text-deep-navy focus:outline-none focus:ring-2 focus:ring-amber-gold/30 text-center" 
             />
             <input 
               placeholder="Category Name (e.g. Most Likely to...)" 
               value={newCat.name} 
               onChange={(e) => setNewCat({ ...newCat, name: e.target.value })}
-              className="flex-1 px-4 py-2.5 rounded-xl border border-warm-sand bg-white/50 text-deep-navy focus:outline-none focus:ring-2 focus:ring-amber-gold/30" 
+              className="flex-1 px-4 py-2.5 rounded-xl border border-warm-sand bg-parchment/80 dark:bg-warm-sand/30 text-deep-navy focus:outline-none focus:ring-2 focus:ring-amber-gold/30" 
             />
             <button onClick={handleAdd} className="flex items-center gap-2 px-5 py-3 bg-deep-navy text-parchment rounded-xl text-sm hover:bg-archive-navy transition-colors">
               <Plus size={16} /> Add
@@ -76,7 +76,7 @@ export default function AdminHallOfFame() {
 
         <div className="space-y-3">
           {categories.map((cat) => (
-            <div key={cat._id} className="bg-white/50 rounded-xl p-4 border border-warm-sand/50 flex items-center justify-between">
+            <div key={cat._id} className="bg-parchment/80 dark:bg-warm-sand/30 rounded-xl p-4 border border-warm-sand/50 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <span className="text-xl">{cat.emoji}</span>
                 <div>
