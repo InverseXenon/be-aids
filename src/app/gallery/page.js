@@ -5,7 +5,6 @@ import { Search, X, ChevronLeft, ChevronRight, Play } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { getSessionId, getUserName, setUserName } from "@/lib/session";
-import { formatDistanceToNow } from "date-fns";
 
 function Interactions({ targetId }) {
   const [likes, setLikes] = useState(0);
