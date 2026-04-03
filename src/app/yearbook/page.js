@@ -85,7 +85,7 @@ export default function YearbookPage() {
                 <div className="w-full h-full flex items-center justify-center min-h-[500px]">
                   <p className="text-deep-navy/40 animate-pulse font-handwriting text-2xl">Publishing the yearbook...</p>
                 </div>
-              ) : (typeof window !== "undefined" && (
+              ) : (
                 <HTMLFlipBook
                   ref={bookRef}
                   width={400}
@@ -176,7 +176,7 @@ export default function YearbookPage() {
                   {/* Back Cover */}
                   <Page><BackCover /></Page>
                 </HTMLFlipBook>
-              ))}
+              )}
             </div>
           </div>
 
