@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { Music, Play, Pause, SkipForward, Volume2, VolumeX } from "lucide-react";
 
 const TRACKS = [
-  { title: "Yaariyan (Cocktail) 💫", url: "/music/yaariyan.m4a" },
+  { title: "Yaariyan Reprise (ABCD) 💫", url: "/music/yaariyan.m4a" },
   { title: "Tera Yaar Hoon Main 🎸", url: "/music/terayaar.m4a" },
   { title: "See You Again 🕊️", url: "/music/seeyouagain.m4a" },
   { title: "Yeh Dosti Hum Nahi Todenge 🏍️", url: "/music/yehdosti.m4a" },
