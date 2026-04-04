@@ -56,11 +56,13 @@ export default function MessagesPage() {
     e.preventDefault();
     if (!form.author.trim() || !form.content.trim()) return;
     try {
-      await fetch("/api/messages", {
+      const res = await fetch("/api/messages", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
+      const newMsg = await res.json();
+      setMessages([newMsg, ...messages]);
       setSubmitted(true);
       setForm({ author: "", content: "", color: "lemon" });
     } catch {}
@@ -87,10 +89,9 @@ export default function MessagesPage() {
           >
             {submitted ? (
               <div className="text-center py-4">
-                <p className="font-handwriting text-xl text-amber-gold">💌 Message submitted!</p>
-                <p className="text-sm text-deep-navy/50 mt-2">It will appear after admin approval.</p>
-                <button onClick={() => setSubmitted(false)} className="mt-3 text-sm text-archive-navy hover:underline">
-                  Write another
+                <p className="font-handwriting text-xl text-amber-gold">📌 Message pinned to the board!</p>
+                <button onClick={() => setSubmitted(false)} className="mt-4 text-sm text-archive-navy hover:underline">
+                  Pin another memory
                 </button>
               </div>
             ) : (

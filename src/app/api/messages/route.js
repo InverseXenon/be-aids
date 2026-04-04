@@ -16,7 +16,7 @@ export async function GET(request) {
 export async function POST(request) {
   await dbConnect();
   const data = await request.json();
-  const message = await Message.create({ ...data, approved: false });
+  const message = await Message.create({ ...data, approved: true });
   return NextResponse.json(message, { status: 201 });
 }
 

@@ -10,6 +10,8 @@ const MediaSchema = new mongoose.Schema(
     tags: [String],
     thumbnail: { type: String, default: "" },
     caption: { type: String, default: "" },
+    approved: { type: Boolean, default: false },
+    likes: { type: Number, default: 0 },
   },
   { timestamps: true }
 );

@@ -87,7 +87,7 @@ export default function AdminTimeline() {
             <label className="block text-xs font-medium text-deep-navy/60 mb-2">Attach Event Photos (Optional)</label>
             <CloudinaryUploadWidget 
               onUploadSuccess={(url, publicId) => {
-                setForm({...form, photos: [...form.photos, { url, publicId }]});
+                setForm(prev => ({...prev, photos: [...prev.photos, { url, publicId }]}));
               }}
             />
             {form.photos.length > 0 && (

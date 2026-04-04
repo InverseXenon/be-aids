@@ -6,20 +6,24 @@ export default function CloudinaryUploadWidget({ onUploadSuccess }) {
   const [uploading, setUploading] = useState(false);
 
   const handleUpload = async (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
     setUploading(true);
-    
-    const fd = new FormData();
-    fd.append("file", file);
-    fd.append("folder", "vesit-aids/timeline");
 
     try {
-      const res = await fetch("/api/upload", { method: "POST", body: fd });
-      if (res.ok) {
-        const data = await res.json();
-        onUploadSuccess(data.url, data.publicId);
-      }
+      await Promise.all(
+        files.map(async (file) => {
+          const fd = new FormData();
+          fd.append("file", file);
+          fd.append("folder", "vesit-aids/timeline");
+
+          const res = await fetch("/api/upload", { method: "POST", body: fd });
+          if (res.ok) {
+            const data = await res.json();
+            onUploadSuccess(data.url, data.publicId);
+          }
+        })
+      );
     } catch (err) {
       console.error("Upload failed", err);
     }
@@ -32,6 +36,7 @@ export default function CloudinaryUploadWidget({ onUploadSuccess }) {
       <input 
         type="file" 
         accept="image/*,video/*" 
+        multiple
         onChange={handleUpload} 
         className="hidden" 
         disabled={uploading} 

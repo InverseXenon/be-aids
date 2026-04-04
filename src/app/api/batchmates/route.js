@@ -15,7 +15,9 @@ export async function GET(request) {
       { specialization: { $regex: search, $options: "i" } },
     ];
   }
-  const batchmates = await Batchmate.find(filter).sort({ name: 1 });
+  const batchmates = await Batchmate.find(filter)
+    .collation({ locale: "en_US", numericOrdering: true })
+    .sort({ rollNo: 1, name: 1 });
   return NextResponse.json(batchmates);
 }
 

@@ -1,6 +1,7 @@
 import { Space_Grotesk, Inter, Caveat } from "next/font/google";
 import "./globals.css";
 import KonamiCode from "@/components/shared/KonamiCode";
+import LofiPlayer from "@/components/shared/LofiPlayer";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 
 const spaceGrotesk = Space_Grotesk({
@@ -41,6 +42,7 @@ export default function RootLayout({ children }) {
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <div className="texture-overlay" />
           <KonamiCode />
+          <LofiPlayer />
           {children}
         </ThemeProvider>
       </body>

@@ -16,16 +16,13 @@ const stickyColors = {
 export default function AdminMessages() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const [pending, setPending] = useState([]);
-  const [approved, setApproved] = useState([]);
-  const [tab, setTab] = useState("pending");
+  const [messages, setMessages] = useState([]);
 
   useEffect(() => { if (status === "unauthenticated") router.push("/admin/login"); }, [status, router]);
   useEffect(() => { loadData(); }, []);
 
   const loadData = () => {
-    fetch("/api/messages?pending=true").then((r) => r.json()).then(setPending).catch(() => {});
-    fetch("/api/messages").then((r) => r.json()).then(setApproved).catch(() => {});
+    fetch("/api/messages").then((r) => r.json()).then(setMessages).catch(() => {});
   };
 
   const handleApprove = async (id) => {
@@ -44,8 +41,6 @@ export default function AdminMessages() {
 
   if (status !== "authenticated") return null;
 
-  const messages = tab === "pending" ? pending : approved;
-
   return (
     <div className="min-h-screen bg-parchment">
       <header className="bg-deep-navy text-parchment py-4 px-6">
@@ -55,17 +50,7 @@ export default function AdminMessages() {
         </div>
       </header>
       <main className="max-w-4xl mx-auto px-4 py-8">
-        {/* Tabs */}
-        <div className="flex gap-2 mb-6">
-          <button onClick={() => setTab("pending")}
-            className={`px-4 py-2 text-sm rounded-full transition-colors ${tab === "pending" ? "bg-amber-gold text-white" : "bg-warm-sand/50 text-deep-navy/60"}`}>
-            Pending ({pending.length})
-          </button>
-          <button onClick={() => setTab("approved")}
-            className={`px-4 py-2 text-sm rounded-full transition-colors ${tab === "approved" ? "bg-amber-gold text-white" : "bg-warm-sand/50 text-deep-navy/60"}`}>
-            Approved ({approved.length})
-          </button>
-        </div>
+        {/* Removed Tabs since messages are auto-approved */}
 
         <div className="space-y-3">
           {messages.map((msg) => (
@@ -75,11 +60,6 @@ export default function AdminMessages() {
                 <p className="text-xs text-deep-navy/40 mt-1">— {msg.author} · {new Date(msg.createdAt).toLocaleDateString()}</p>
               </div>
               <div className="flex gap-1 flex-shrink-0 ml-3">
-                {tab === "pending" && (
-                  <button onClick={() => handleApprove(msg._id)} className="p-1.5 bg-green-500 text-white rounded-full hover:bg-green-600">
-                    <Check size={14} />
-                  </button>
-                )}
                 <button onClick={() => handleDelete(msg._id)} className="p-1.5 bg-red-400 text-white rounded-full hover:bg-red-600">
                   <Trash2 size={14} />
                 </button>

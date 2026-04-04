@@ -5,7 +5,8 @@ import { uploadToCloudinary, deleteFromCloudinary } from "@/lib/cloudinary";
 
 export async function POST(request) {
   const session = await getServerSession(authOptions);
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  // Allow public upload for event submissions, but we just let it pass through
+  // Security could be improved later (e.g., rate limiting)
 
   const formData = await request.formData();
   const file = formData.get("file");

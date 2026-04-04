@@ -12,11 +12,20 @@ export async function GET(request) {
   const year = searchParams.get("year");
   const tag = searchParams.get("tag");
   const type = searchParams.get("type"); // Not applicable to events mostly, but we'll try
-  
   const filter = {};
   if (year) filter.year = parseInt(year);
   if (tag) filter.tags = { $in: [tag] }; // Gallery uses tags
   if (type) filter.type = type;
+
+  // By default only show approved items for public view
+  const session = await getServerSession(authOptions);
+  const showPending = searchParams.get("pending") === "true";
+  
+  if (session && showPending) {
+    filter.approved = false;
+  } else if (!session || searchParams.get("public") === "true") {
+    filter.approved = true;
+  }
 
   // Get regular gallery media
   const galleryItems = await Media.find(filter).lean();
@@ -72,12 +81,27 @@ export async function GET(request) {
 }
 
 export async function POST(request) {
+  await dbConnect();
+  const session = await getServerSession(authOptions);
+  const data = await request.json();
+  
+  // If not admin, force approved to false
+  if (!session) {
+    data.approved = false;
+  }
+  
+  const media = await Media.create(data);
+  return NextResponse.json(media, { status: 201 });
+}
+
+export async function PUT(request) {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   await dbConnect();
   const data = await request.json();
-  const media = await Media.create(data);
-  return NextResponse.json(media, { status: 201 });
+  const { _id, ...updateData } = data;
+  const media = await Media.findByIdAndUpdate(_id, updateData, { new: true });
+  return NextResponse.json(media);
 }
 
 export async function DELETE(request) {
