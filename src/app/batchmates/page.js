@@ -33,7 +33,7 @@ const getInitials = (name) => {
 
 function ProfileCard({ batchmate, index }) {
   const [isFlipped, setIsFlipped] = useState(false);
-  const rotation = useMemo(() => Math.random() * 4 - 2, []);
+  const rotation = useMemo(() => Math.random() * 6 - 3, []);
 
   return (
     <motion.div
@@ -42,81 +42,87 @@ function ProfileCard({ batchmate, index }) {
       viewport={{ once: true }}
       transition={{ delay: index * 0.03, duration: 0.5 }}
       style={{ rotate: rotation }}
-      className="group relative h-80 cursor-pointer [perspective:1000px]"
+      className="group relative h-[28rem] cursor-pointer [perspective:1000px]"
       onMouseEnter={() => setIsFlipped(true)}
       onMouseLeave={() => setIsFlipped(false)}
       onClick={() => setIsFlipped(!isFlipped)}
     >
       <motion.div 
-        className="w-full h-full relative [transform-style:preserve-3d] transition-transform duration-600 ease-out shadow-lg group-hover:shadow-2xl rounded-sm"
+        className="w-full h-full relative [transform-style:preserve-3d] transition-transform duration-700 ease-in-out shadow-lg group-hover:shadow-2xl rounded-sm"
         animate={{ rotateY: isFlipped ? 180 : 0 }}
         whileHover={{ scale: 1.05 }}
       >
-        {/* Front of Polaroid */}
-        <div className="absolute inset-0 [backface-visibility:hidden] bg-[#fdfbf6] p-3 pb-16 border border-warm-sand/40 rounded-sm flex flex-col shadow-[inset_0_0_40px_rgba(0,0,0,0.02)]">
-          {/* Tape Effect with Name */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-28 h-7 bg-white/60 backdrop-blur-md border border-white/30 rotate-[-1deg] z-20 shadow-sm flex items-center justify-center">
-            <span className="font-handwriting text-xs font-bold text-deep-navy/70 whitespace-nowrap px-2">{batchmate.name}</span>
-          </div>
+        {/* Front of Polaroid - Fixed Paper Look */}
+        <div className="absolute inset-0 [backface-visibility:hidden] bg-[#fcfaf2] p-4 pb-28 border border-warm-sand/30 rounded-sm flex flex-col shadow-[inset_0_0_60px_rgba(0,0,0,0.03)] overflow-hidden">
+          {/* Decorative Tape Sticker */}
+          <div className="absolute top-0 right-[-10px] w-20 h-8 bg-white/40 backdrop-blur-sm border border-white/20 rotate-[25deg] z-20 shadow-sm opacity-60" />
           
-          <div className="flex-1 bg-[#1a1a1a] overflow-hidden relative shadow-inner">
+          <div className="flex-1 bg-[#1a1a1b] overflow-hidden relative shadow-inner ring-1 ring-black/10">
             {batchmate.photo?.url ? (
               <img
                 src={optimizeCloudinaryUrl(batchmate.photo.url)}
                 alt={batchmate.name}
-                className="w-full h-full object-cover filter contrast-[1.05] saturate-[0.9] sepia-[0.1]"
+                className="w-full h-full object-cover filter contrast-[1.02] saturate-[0.95] brightness-[1.02]"
               />
             ) : (
-              <div className="w-full h-full flex items-center justify-center text-4xl font-bold text-white/20 bg-gradient-to-br from-deep-navy to-archive-navy">
+              <div className="w-full h-full flex items-center justify-center text-5xl font-bold text-white/20 bg-gradient-to-br from-deep-navy via-archive-navy to-deep-navy">
                 {getInitials(batchmate.name)}
               </div>
             )}
             {batchmate.superlativeTitle && (
-              <div className="absolute bottom-2 right-2 bg-amber-gold/90 backdrop-blur-md rounded-full w-8 h-8 flex items-center justify-center text-white text-xs border border-white/20" title={batchmate.superlativeTitle}>
+              <div className="absolute bottom-2 right-2 bg-amber-600/90 backdrop-blur-md rounded-full w-9 h-9 flex items-center justify-center text-white text-sm border border-white/30 shadow-lg" title={batchmate.superlativeTitle}>
                 🏆
               </div>
             )}
           </div>
-          <div className="absolute bottom-0 left-0 right-0 h-16 flex items-center justify-center pointer-events-none">
-            <p className="font-handwriting text-lg text-[#1F2937] line-clamp-2 px-4 text-center leading-tight italic">
-              "{batchmate.quote || "Graduating soon..."}"
+          
+          <div className="absolute bottom-0 left-0 right-0 h-28 flex flex-col items-center justify-center px-4 py-2 pointer-events-none">
+            <h3 className="font-serif text-xl font-bold text-slate-800 mb-1 tracking-tight truncate w-full text-center">{batchmate.name}</h3>
+            <p className="font-handwriting text-lg text-slate-600 line-clamp-2 text-center leading-snug italic max-w-[90%]">
+              {batchmate.quote ? `"${batchmate.quote}"` : "Graduating soon..."}
             </p>
           </div>
         </div>
 
-        {/* Back of Polaroid */}
+        {/* Back of Polaroid - Memory Notebook Look */}
         <div 
-          className="absolute inset-0 [backface-visibility:hidden] bg-[#f8f5f0] dark:bg-[#1c1a18] p-5 border border-warm-sand/50 rounded-sm flex flex-col items-center justify-center text-center overflow-hidden" 
-          style={{ transform: "rotateY(180deg)" }}
+          className="absolute inset-0 [backface-visibility:hidden] bg-[#f8f5f0] text-slate-900 p-6 border border-warm-sand/50 rounded-sm flex flex-col items-center justify-center text-center overflow-hidden" 
+          style={{ 
+            transform: "rotateY(180deg)",
+            backgroundImage: "linear-gradient(#EAE3D2 1px, transparent 1px)",
+            backgroundSize: "100% 1.8rem"
+          }}
         >
-          <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:16px_16px]" />
+          {/* Paper texture and margin line */}
+          <div className="absolute inset-0 opacity-[0.05] pointer-events-none bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:16px_16px]" />
+          <div className="absolute left-[2.5rem] top-0 bottom-0 w-[1px] bg-red-400/20" />
           
           <h3 className="font-serif text-xl font-bold text-deep-navy mb-1 relative z-10">{batchmate.name}</h3>
           {batchmate.superlativeTitle && (
-            <p className="text-amber-gold text-xs font-semibold uppercase tracking-widest mb-3 border-b border-amber-gold/20 pb-2 relative z-10">
+            <p className="text-amber-700 text-xs font-semibold uppercase tracking-widest mb-4 border-b border-amber-700/20 pb-1 relative z-10">
               {batchmate.superlativeTitle}
             </p>
           )}
           
-          {batchmate.bio ? (
-            <div className="max-h-[140px] overflow-y-auto px-1 scrollbar-hide relative z-10">
-              <p className="font-sans text-sm text-deep-navy/80 leading-relaxed text-center italic">
+          <div className="flex-1 w-full max-h-[220px] overflow-y-auto px-2 py-4 scrollbar-hide relative z-10">
+            {batchmate.bio ? (
+              <p className="font-sans text-sm text-slate-800 leading-[1.8rem] text-justify italic">
                 {batchmate.bio}
               </p>
-            </div>
-          ) : (
-            <p className="text-sm text-deep-navy/40 italic mb-4 relative z-10">No bio yet! Just legendary vibes. ✨</p>
-          )}
+            ) : (
+              <p className="text-sm text-slate-400 italic leading-[1.8rem]">Waiting for a story... ✨</p>
+            )}
+          </div>
           
-          <div className="flex gap-4 mt-auto relative z-10">
+          <div className="flex gap-5 mt-6 relative z-10 pt-4 border-t border-warm-sand/40">
             {batchmate.linkedin && (
-              <a onClick={e => e.stopPropagation()} href={batchmate.linkedin} target="_blank" rel="noopener noreferrer" className="p-2 bg-archive-navy/10 text-archive-navy rounded-full hover:bg-archive-navy/20 transition-all hover:scale-110">
-                <Linkedin size={18} />
+              <a onClick={e => e.stopPropagation()} href={batchmate.linkedin} target="_blank" rel="noopener noreferrer" className="p-2.5 bg-blue-600/10 text-blue-700 rounded-full hover:bg-blue-600/20 transition-all hover:scale-110 shadow-sm">
+                <Linkedin size={20} />
               </a>
             )}
             {batchmate.instagram && (
-              <a onClick={e => e.stopPropagation()} href={batchmate.instagram} target="_blank" rel="noopener noreferrer" className="p-2 bg-dusty-pink/10 text-dusty-pink rounded-full hover:bg-dusty-pink/20 transition-all hover:scale-110">
-                <Instagram size={18} />
+              <a onClick={e => e.stopPropagation()} href={batchmate.instagram} target="_blank" rel="noopener noreferrer" className="p-2.5 bg-pink-600/10 text-pink-700 rounded-full hover:bg-pink-600/20 transition-all hover:scale-110 shadow-sm">
+                <Instagram size={20} />
               </a>
             )}
           </div>
