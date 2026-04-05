@@ -34,11 +34,11 @@ const getInitials = (name) => {
 
 function BatchmateSkeleton() {
   return (
-    <div className="bg-[#fcfaf2] p-4 pb-28 border border-warm-sand/30 rounded-sm flex flex-col h-[28rem] shadow-sm">
+    <div className="bg-[#fcfaf2] p-4 pb-36 border border-warm-sand/30 rounded-sm flex flex-col h-[32rem] shadow-sm">
       <Skeleton className="flex-1 rounded-none mb-4" />
       <div className="space-y-3 px-2">
         <Skeleton className="h-6 w-3/4 mx-auto" />
-        <Skeleton className="h-4 w-1/2 mx-auto" />
+        <Skeleton className="h-10 w-4/5 mx-auto" />
       </div>
     </div>
   );
@@ -55,7 +55,7 @@ function ProfileCard({ batchmate, index }) {
       viewport={{ once: true }}
       transition={{ delay: index * 0.03, duration: 0.5 }}
       style={{ rotate: rotation }}
-      className="group relative h-[28rem] cursor-pointer [perspective:1000px]"
+      className="group relative h-[32rem] cursor-pointer [perspective:1000px]"
       onMouseEnter={() => setIsFlipped(true)}
       onMouseLeave={() => setIsFlipped(false)}
       onClick={() => setIsFlipped(!isFlipped)}
@@ -66,7 +66,7 @@ function ProfileCard({ batchmate, index }) {
         whileHover={{ scale: 1.05 }}
       >
         {/* Front of Polaroid - Fixed Paper Look */}
-        <div className="absolute inset-0 [backface-visibility:hidden] bg-[#fcfaf2] p-4 pb-28 border border-warm-sand/30 rounded-sm flex flex-col shadow-[inset_0_0_60px_rgba(0,0,0,0.03)] overflow-hidden">
+        <div className="absolute inset-0 [backface-visibility:hidden] bg-[#fcfaf2] p-4 pb-36 border border-warm-sand/30 rounded-sm flex flex-col shadow-[inset_0_0_60px_rgba(0,0,0,0.03)] overflow-hidden">
           {/* Decorative Tape Sticker */}
           <div className="absolute top-0 right-[-10px] w-20 h-8 bg-white/40 backdrop-blur-sm border border-white/20 rotate-[25deg] z-20 shadow-sm opacity-60" />
           
@@ -89,9 +89,9 @@ function ProfileCard({ batchmate, index }) {
             )}
           </div>
           
-          <div className="absolute bottom-0 left-0 right-0 h-28 flex flex-col items-center justify-center px-4 py-2 pointer-events-none">
+          <div className="absolute bottom-0 left-0 right-0 h-36 flex flex-col items-center justify-center px-4 py-3 pointer-events-none">
             <h3 className="font-serif text-xl font-bold text-slate-800 mb-1 tracking-tight truncate w-full text-center">{batchmate.name}</h3>
-            <p className="font-handwriting text-lg text-slate-600 line-clamp-2 text-center leading-snug italic max-w-[90%]">
+            <p className="font-handwriting text-lg text-slate-600 line-clamp-4 text-center leading-snug italic max-w-[90%]">
               {batchmate.quote ? `"${batchmate.quote}"` : "Graduating soon..."}
             </p>
           </div>
