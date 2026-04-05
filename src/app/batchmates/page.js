@@ -54,8 +54,10 @@ function ProfileCard({ batchmate, index }) {
       >
         {/* Front of Polaroid */}
         <div className="absolute inset-0 [backface-visibility:hidden] bg-[#fdfbf6] p-3 pb-16 border border-warm-sand/40 rounded-sm flex flex-col shadow-[inset_0_0_40px_rgba(0,0,0,0.02)]">
-          {/* Tape Effect */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/3 w-16 h-6 bg-white/40 backdrop-blur-sm border border-white/20 rotate-[-2deg] z-10 shadow-sm" />
+          {/* Tape Effect with Name */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-28 h-7 bg-white/60 backdrop-blur-md border border-white/30 rotate-[-1deg] z-20 shadow-sm flex items-center justify-center">
+            <span className="font-handwriting text-xs font-bold text-deep-navy/70 whitespace-nowrap px-2">{batchmate.name}</span>
+          </div>
           
           <div className="flex-1 bg-[#1a1a1a] overflow-hidden relative shadow-inner">
             {batchmate.photo?.url ? (
@@ -76,7 +78,9 @@ function ProfileCard({ batchmate, index }) {
             )}
           </div>
           <div className="absolute bottom-0 left-0 right-0 h-16 flex items-center justify-center pointer-events-none">
-            <h3 className="font-handwriting text-2xl text-[#1F2937] truncate px-4">{batchmate.name}</h3>
+            <p className="font-handwriting text-lg text-[#1F2937] line-clamp-2 px-4 text-center leading-tight italic">
+              "{batchmate.quote || "Graduating soon..."}"
+            </p>
           </div>
         </div>
 
@@ -85,7 +89,6 @@ function ProfileCard({ batchmate, index }) {
           className="absolute inset-0 [backface-visibility:hidden] bg-[#f8f5f0] dark:bg-[#1c1a18] p-5 border border-warm-sand/50 rounded-sm flex flex-col items-center justify-center text-center overflow-hidden" 
           style={{ transform: "rotateY(180deg)" }}
         >
-          {/* Subtle pattern background for the back */}
           <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:16px_16px]" />
           
           <h3 className="font-serif text-xl font-bold text-deep-navy mb-1 relative z-10">{batchmate.name}</h3>
@@ -94,12 +97,15 @@ function ProfileCard({ batchmate, index }) {
               {batchmate.superlativeTitle}
             </p>
           )}
-          {batchmate.quote ? (
-            <p className="font-handwriting text-lg text-deep-navy/80 mb-4 line-clamp-5 italic relative z-10 leading-snug">
-              "{batchmate.quote}"
-            </p>
+          
+          {batchmate.bio ? (
+            <div className="max-h-[140px] overflow-y-auto px-1 scrollbar-hide relative z-10">
+              <p className="font-sans text-sm text-deep-navy/80 leading-relaxed text-center italic">
+                {batchmate.bio}
+              </p>
+            </div>
           ) : (
-            <p className="text-sm text-deep-navy/40 italic mb-4 relative z-10">Waiting for a witty quote...</p>
+            <p className="text-sm text-deep-navy/40 italic mb-4 relative z-10">No bio yet! Just legendary vibes. ✨</p>
           )}
           
           <div className="flex gap-4 mt-auto relative z-10">
