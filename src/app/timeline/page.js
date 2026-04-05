@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Calendar, Tag, X, ChevronLeft, ChevronRight } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import { optimizeCloudinaryUrl } from "@/lib/cloudinary-client";
 
 const yearColors = {
   1: { bg: "bg-year1", border: "border-amber-gold", dot: "bg-amber-gold", label: "Year 1 · 2022–23" },
@@ -47,7 +48,7 @@ function Lightbox({ photos, index, onClose, onNav }) {
         />
       ) : (
         <img
-          src={photos[index]?.url}
+          src={optimizeCloudinaryUrl(photos[index]?.url)}
           alt=""
           className="max-h-[85vh] max-w-[90vw] object-contain rounded-lg"
           onClick={(e) => e.stopPropagation()}
@@ -110,7 +111,7 @@ function EventCard({ event, side }) {
                       </div>
                     </>
                   ) : (
-                    <img src={photo.url} alt="" className="w-full h-full object-cover" />
+                    <img src={optimizeCloudinaryUrl(photo.url)} alt="" className="w-full h-full object-cover" />
                   )}
                 </button>
               ))}

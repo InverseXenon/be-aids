@@ -22,7 +22,7 @@ export async function uploadToCloudinary(fileBuffer, folder = "vesit-aids/genera
   });
 }
 
-export async function deleteFromCloudinary(publicId) {
+export function deleteFromCloudinary(publicId) {
   return cloudinary.uploader.destroy(publicId);
 }
 

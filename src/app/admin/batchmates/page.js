@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Plus, Trash2, Edit2, Save, X, Upload } from "lucide-react";
+import { optimizeCloudinaryUrl } from "@/lib/cloudinary-client";
 
 export default function AdminBatchmates() {
   const { data: session, status } = useSession();
@@ -90,7 +91,7 @@ export default function AdminBatchmates() {
               <Upload size={14} /> {uploading ? "Uploading..." : "Upload Photo"}
               <input type="file" accept="image/*" onChange={handlePhotoUpload} className="hidden" />
             </label>
-            {form.photo?.url && <img src={form.photo.url} alt="" className="w-12 h-12 rounded-full object-cover border border-warm-sand" />}
+            {form.photo?.url && <img src={optimizeCloudinaryUrl(form.photo.url)} alt="" className="w-12 h-12 rounded-full object-cover border border-warm-sand" />}
           </div>
 
           <div className="flex gap-2 mt-4">
@@ -109,7 +110,7 @@ export default function AdminBatchmates() {
             <div key={b._id} className="bg-parchment/80 dark:bg-warm-sand/30 rounded-xl p-4 border border-warm-sand/50 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-warm-sand/50 overflow-hidden flex-shrink-0">
-                  {b.photo?.url ? <img src={b.photo.url} alt="" className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-sm text-deep-navy/30">{b.name?.[0]}</div>}
+                  {b.photo?.url ? <img src={optimizeCloudinaryUrl(b.photo.url)} alt="" className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-sm text-deep-navy/30">{b.name?.[0]}</div>}
                 </div>
                 <div>
                   <h3 className="font-medium text-deep-navy text-sm">{b.name}</h3>

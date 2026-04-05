@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Trophy, Lock } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import { optimizeCloudinaryUrl } from "@/lib/cloudinary-client";
 
 function getSessionId() {
   if (typeof window === "undefined") return "";
@@ -65,7 +66,7 @@ function VotingCard({ category, onVote }) {
             <div key={i} className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-full bg-warm-sand/50 overflow-hidden flex-shrink-0">
                 {r.batchmate?.photo?.url ? (
-                  <img src={r.batchmate.photo.url} alt="" className="w-full h-full object-cover" />
+                  <img src={optimizeCloudinaryUrl(r.batchmate.photo.url)} alt="" className="w-full h-full object-cover" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-xs text-deep-navy/30">
                     {r.batchmate?.name?.[0]}

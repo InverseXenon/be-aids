@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Upload, Trash2, Image } from "lucide-react";
+import { optimizeCloudinaryUrl } from "@/lib/cloudinary-client";
 
 export default function AdminGallery() {
   const { data: session, status } = useSession();
@@ -138,7 +139,7 @@ export default function AdminGallery() {
                 <div className="aspect-video bg-deep-navy/10 flex items-center justify-center text-xs text-deep-navy/30">🎬 Video / {m.eventName}</div>
               ) : (
                 <div className="w-full aspect-square relative bg-deep-navy/5 flex items-center justify-center">
-                  <img src={m.url} alt="" className={`w-full h-full object-cover`} />
+                  <img src={optimizeCloudinaryUrl(m.url)} alt="" className={`w-full h-full object-cover`} />
                 </div>
               )}
               <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">

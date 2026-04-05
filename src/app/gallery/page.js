@@ -5,6 +5,7 @@ import { Search, X, ChevronLeft, ChevronRight, Play, Upload, CheckCircle2 } from
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { getSessionId, getUserName, setUserName } from "@/lib/session";
+import { optimizeCloudinaryUrl } from "@/lib/cloudinary-client";
 
 function Interactions({ targetId }) {
   const [likes, setLikes] = useState(0);
@@ -132,7 +133,7 @@ function Lightbox({ item, media, onNavigate, onClose }) {
             onClick={(e) => e.stopPropagation()}
           />
         ) : (
-          <img src={item.url} alt={item.caption || ""} className="max-h-full max-w-full object-contain rounded-lg shadow-2xl" onClick={(e) => e.stopPropagation()} />
+          <img src={optimizeCloudinaryUrl(item.url)} alt={item.caption || ""} className="max-h-full max-w-full object-contain rounded-lg shadow-2xl" onClick={(e) => e.stopPropagation()} />
         )}
       </div>
 
@@ -323,7 +324,7 @@ export default function GalleryPage() {
                       </div>
                     </div>
                   ) : (
-                    <img src={item.url} alt={item.caption || ""} className="w-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <img src={optimizeCloudinaryUrl(item.url)} alt={item.caption || ""} className="w-full object-cover group-hover:scale-105 transition-transform duration-500" />
                   )}
                   {item.eventName && (
                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-3 pt-8">

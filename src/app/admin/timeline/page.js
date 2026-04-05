@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Plus, Trash2, Edit2, Save, X } from "lucide-react";
 import CloudinaryUploadWidget from "@/components/shared/CloudinaryUploadWidget";
+import { optimizeCloudinaryUrl } from "@/lib/cloudinary-client";
 
 export default function AdminTimeline() {
   const { data: session, status } = useSession();
@@ -97,7 +98,7 @@ export default function AdminTimeline() {
                     {(p.url.includes('/video/') || p.url.match(/\.(mp4|webm|ogg)$/i)) ? (
                       <video src={p.url} className="w-full h-full object-cover" />
                     ) : (
-                      <img src={p.url} alt="" className="w-full h-full object-cover" />
+                      <img src={optimizeCloudinaryUrl(p.url)} alt="" className="w-full h-full object-cover" />
                     )}
                     <button onClick={() => setForm({...form, photos: form.photos.filter((_, idx) => idx !== i)})} className="absolute top-1 right-1 p-1 bg-black/50 hover:bg-red-500 rounded text-white opacity-0 group-hover:opacity-100 transition-opacity"><X size={12}/></button>
                   </div>

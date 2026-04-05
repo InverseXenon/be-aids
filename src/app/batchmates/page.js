@@ -21,6 +21,7 @@ const Instagram = ({ size = 16, className = "" }) => (
 );
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import { optimizeCloudinaryUrl } from "@/lib/cloudinary-client";
 
 function ProfileCard({ batchmate, index }) {
   const [isFlipped, setIsFlipped] = useState(false);
@@ -46,7 +47,7 @@ function ProfileCard({ batchmate, index }) {
           <div className="flex-1 bg-warm-sand/50 overflow-hidden relative shadow-inner">
             {batchmate.photo?.url ? (
               <img
-                src={batchmate.photo.url}
+                src={optimizeCloudinaryUrl(batchmate.photo.url)}
                 alt={batchmate.name}
                 className="w-full h-full object-cover filter contrast-110 saturate-[0.8]"
               />
