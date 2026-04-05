@@ -25,6 +25,13 @@ export async function PUT(request) {
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   await dbConnect();
   const data = await request.json();
+
+  if (data.all) {
+    // Bulk approve all pending items
+    await Message.updateMany({ approved: false }, { $set: { approved: true } });
+    return NextResponse.json({ success: true });
+  }
+
   const { _id, ...updateData } = data;
   const message = await Message.findByIdAndUpdate(_id, updateData, { new: true });
   return NextResponse.json(message);

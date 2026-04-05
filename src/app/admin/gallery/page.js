@@ -117,19 +117,34 @@ export default function AdminGallery() {
         </div>
 
         {/* Tab Switcher */}
-        <div className="flex gap-4 mb-6 border-b border-warm-sand/30">
-          <button 
-            onClick={() => setView("approved")}
-            className={`pb-2 text-sm font-medium transition-colors ${view === "approved" ? "text-deep-navy border-b-2 border-deep-navy" : "text-deep-navy/40 hover:text-deep-navy/70"}`}
-          >
-            Approved Gallery
-          </button>
-          <button 
-            onClick={() => setView("pending")}
-            className={`pb-2 text-sm font-medium transition-colors ${view === "pending" ? "text-deep-navy border-b-2 border-deep-navy" : "text-deep-navy/40 hover:text-deep-navy/70"}`}
-          >
-            Pending Approvals ({media.filter(m => !m.approved).length})
-          </button>
+        <div className="flex gap-4 mb-6 border-b border-warm-sand/30 items-end justify-between">
+          <div className="flex gap-4 h-full">
+            <button 
+              onClick={() => setView("approved")}
+              className={`pb-2 text-sm font-medium transition-colors ${view === "approved" ? "text-deep-navy border-b-2 border-deep-navy" : "text-deep-navy/40 hover:text-deep-navy/70"}`}
+            >
+              Approved Gallery
+            </button>
+            <button 
+              onClick={() => setView("pending")}
+              className={`pb-2 text-sm font-medium transition-colors ${view === "pending" ? "text-deep-navy border-b-2 border-deep-navy" : "text-deep-navy/40 hover:text-deep-navy/70"}`}
+            >
+              Pending Approvals ({media.filter(m => !m.approved).length})
+            </button>
+          </div>
+          
+          {view === "pending" && media.filter(m => !m.approved).length > 0 && (
+            <button 
+              onClick={async () => {
+                if(!confirm("Approve all pending items?")) return;
+                await fetch("/api/gallery", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ all: true }) });
+                loadData();
+              }}
+              className="mb-2 px-3 py-1 bg-green-600 text-white text-xs font-semibold rounded-lg hover:bg-green-700 transition-colors shadow-sm"
+            >
+              Approve All Pending
+            </button>
+          )}
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">

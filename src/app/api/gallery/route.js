@@ -55,6 +55,7 @@ export async function GET(request) {
           eventName: event.title,
           caption: event.description,
           year: event.year,
+          approved: true, // Timeline images are always "approved"
           createdAt: event.date || event.createdAt || new Date()
         };
       }).filter(Boolean)
@@ -85,8 +86,10 @@ export async function POST(request) {
   const session = await getServerSession(authOptions);
   const data = await request.json();
   
-  // If not admin, force approved to false
-  if (!session) {
+  // Force approved to true for Admins, false for public
+  if (session) {
+    data.approved = true;
+  } else {
     data.approved = false;
   }
   
@@ -99,6 +102,13 @@ export async function PUT(request) {
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   await dbConnect();
   const data = await request.json();
+  
+  if (data.all) {
+    // Bulk approve all pending items
+    await Media.updateMany({ approved: false }, { $set: { approved: true } });
+    return NextResponse.json({ success: true });
+  }
+
   const { _id, ...updateData } = data;
   const media = await Media.findByIdAndUpdate(_id, updateData, { new: true });
   return NextResponse.json(media);
