@@ -6,6 +6,20 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { getSessionId, getUserName, setUserName } from "@/lib/session";
 import { optimizeCloudinaryUrl } from "@/lib/cloudinary-client";
+import Skeleton from "@/components/shared/Skeleton";
+
+function GallerySkeleton() {
+  const heights = ["h-64", "h-48", "h-72", "h-56", "h-80"];
+  return (
+    <div className="columns-2 sm:columns-3 lg:columns-4 gap-4 space-y-4">
+      {Array.from({ length: 12 }).map((_, i) => (
+        <div key={i} className="break-inside-avoid">
+          <Skeleton className={`${heights[i % heights.length]} w-full rounded-xl`} />
+        </div>
+      ))}
+    </div>
+  );
+}
 
 function Interactions({ targetId }) {
   const [likes, setLikes] = useState(0);
@@ -254,15 +268,20 @@ export default function GalleryPage() {
   const [search, setSearch] = useState("");
   const [lightboxItem, setLightboxItem] = useState(null);
   const [showContribute, setShowContribute] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    setIsLoading(true);
     const params = new URLSearchParams();
     if (activeYear) params.set("year", activeYear);
     if (search) params.set("tag", search);
     fetch(`/api/gallery?${params}`)
       .then((r) => r.json())
-      .then(setMedia)
-      .catch(() => {});
+      .then((data) => {
+        setMedia(data);
+        setIsLoading(false);
+      })
+      .catch(() => setIsLoading(false));
   }, [activeYear, search]);
 
   return (
@@ -300,47 +319,45 @@ export default function GalleryPage() {
           </div>
 
           {/* Masonry grid */}
-          <div className="columns-2 sm:columns-3 lg:columns-4 gap-4 space-y-4">
-            {media.map((item, i) => (
-              <motion.div
-                key={item._id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.03 }}
-                className="break-inside-avoid group cursor-pointer"
-                onClick={() => setLightboxItem(item)}
-              >
-                <div className="relative rounded-xl overflow-hidden border border-warm-sand/50 hover:shadow-lg transition-shadow">
-                  {item.type === "video" ? (
-                    <div className="aspect-video bg-deep-navy/10 flex items-center justify-center">
-                      {item.thumbnail ? (
-                        <img src={item.thumbnail} alt="" className="w-full h-full object-cover" />
-                      ) : (
-                        <Play className="text-deep-navy/30" size={40} />
-                      )}
-                      <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Play className="text-white" size={32} />
+          {isLoading ? (
+            <GallerySkeleton />
+          ) : (
+            <div className="columns-2 sm:columns-3 lg:columns-4 gap-4 space-y-4">
+              {media.map((item, i) => (
+                <motion.div
+                  key={item._id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.03 }}
+                  className="break-inside-avoid group cursor-pointer"
+                  onClick={() => setLightboxItem(item)}
+                >
+                  <div className="relative rounded-xl overflow-hidden border border-warm-sand/50 hover:shadow-lg transition-shadow">
+                    {item.type === "video" ? (
+                      <div className="aspect-video bg-deep-navy/10 flex items-center justify-center">
+                        {item.thumbnail ? (
+                          <img src={item.thumbnail} alt="" className="w-full h-full object-cover" />
+                        ) : (
+                          <Play className="text-deep-navy/30" size={40} />
+                        )}
+                        <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                          <Play className="text-white" size={32} />
+                        </div>
                       </div>
-                    </div>
-                  ) : (
-                    <img src={optimizeCloudinaryUrl(item.url)} alt={item.caption || ""} className="w-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                  )}
-                  {item.eventName && (
-                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-3 pt-8">
-                      <p className="text-white text-xs font-medium">{item.eventName}</p>
-                    </div>
-                  )}
-                  {item.likesCount > 0 && (
-                    <div className="absolute top-2 right-2 bg-black/40 backdrop-blur-md rounded-full px-2 py-1 flex items-center gap-1">
-                      <svg className="w-3 h-3 text-dusty-pink fill-dusty-pink" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" stroke="currentColor" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
-                      <span className="text-[10px] text-white font-medium">{item.likesCount}</span>
-                    </div>
-                  )}
-                </div>
-              </motion.div>
-            ))}
-          </div>
+                    ) : (
+                      <img src={optimizeCloudinaryUrl(item.url)} alt={item.caption || ""} className="w-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    )}
+                    {item.eventName && (
+                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-3 pt-8">
+                        <p className="text-white text-xs font-medium">{item.eventName}</p>
+                      </div>
+                    )}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          )}
 
           {media.length === 0 && (
             <p className="text-center text-deep-navy/40 py-20 font-handwriting text-xl">

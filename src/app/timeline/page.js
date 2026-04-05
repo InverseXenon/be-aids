@@ -5,6 +5,34 @@ import { Calendar, Tag, X, ChevronLeft, ChevronRight } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { optimizeCloudinaryUrl } from "@/lib/cloudinary-client";
+import Skeleton from "@/components/shared/Skeleton";
+
+function TimelineSkeleton() {
+  return (
+    <div className="space-y-12 relative">
+      <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-0.5 bg-warm-sand/30 -translate-x-1/2" />
+      {Array.from({ length: 6 }).map((_, i) => (
+        <div key={i} className={`relative flex flex-col md:flex-row items-center ${i % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"}`}>
+          <div className="hidden md:block absolute left-1/2 w-4 h-4 rounded-full bg-warm-sand/50 -translate-x-1/2 z-10" />
+          <div className={`w-full md:w-[calc(50%-2rem)] ${i % 2 === 0 ? "md:mr-auto md:pr-8" : "md:ml-auto md:pl-8"}`}>
+            <div className="bg-warm-sand/10 border border-warm-sand/20 rounded-2xl p-6 shadow-sm min-h-[160px] space-y-4">
+              <div className="flex gap-2">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-4 w-16" />
+              </div>
+              <Skeleton className="h-6 w-3/4" />
+              <Skeleton className="h-4 w-full" />
+              <div className="flex gap-2 mt-4">
+                <Skeleton className="h-12 w-12 rounded-lg" />
+                <Skeleton className="h-12 w-12 rounded-lg" />
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 const yearColors = {
   1: { bg: "bg-year1", border: "border-amber-gold", dot: "bg-amber-gold", label: "Year 1 · 2022–23" },
@@ -150,15 +178,20 @@ export default function TimelinePage() {
   const [events, setEvents] = useState([]);
   const [filterYear, setFilterYear] = useState(null);
   const [filterCategory, setFilterCategory] = useState("All");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    setIsLoading(true);
     const params = new URLSearchParams();
     if (filterYear) params.set("year", filterYear);
     if (filterCategory !== "All") params.set("category", filterCategory);
     fetch(`/api/events?${params}`)
       .then((r) => r.json())
-      .then(setEvents)
-      .catch(() => {});
+      .then((data) => {
+        setEvents(data);
+        setIsLoading(false);
+      })
+      .catch(() => setIsLoading(false));
   }, [filterYear, filterCategory]);
 
   return (
@@ -214,25 +247,31 @@ export default function TimelinePage() {
 
           {/* Timeline */}
           <div className="relative">
-            {/* Center line */}
-            <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-0.5 bg-warm-sand -translate-x-1/2" />
+            {isLoading ? (
+              <TimelineSkeleton />
+            ) : (
+              <>
+                {/* Center line */}
+                <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-0.5 bg-warm-sand -translate-x-1/2" />
 
-            <div className="space-y-8">
-              {events.length === 0 && (
-                <p className="text-center text-deep-navy/40 py-20 font-handwriting text-xl">
-                  No events yet... memories are being collected ✨
-                </p>
-              )}
-              {events.map((event, i) => (
-                <div key={event._id} className="relative">
-                  {/* Center dot */}
-                  <div
-                    className={`hidden md:block absolute left-1/2 top-6 w-4 h-4 rounded-full -translate-x-1/2 border-2 border-parchment ${yearColors[event.year]?.dot || "bg-amber-gold"}`}
-                  />
-                  <EventCard event={event} side={i % 2 === 0 ? "left" : "right"} />
+                <div className="space-y-8">
+                  {events.length === 0 && (
+                    <p className="text-center text-deep-navy/40 py-20 font-handwriting text-xl">
+                      No events yet... memories are being collected ✨
+                    </p>
+                  )}
+                  {events.map((event, i) => (
+                    <div key={event._id} className="relative">
+                      {/* Center dot */}
+                      <div
+                        className={`hidden md:block absolute left-1/2 top-6 w-4 h-4 rounded-full -translate-x-1/2 border-2 border-parchment ${yearColors[event.year]?.dot || "bg-amber-gold"}`}
+                      />
+                      <EventCard event={event} side={i % 2 === 0 ? "left" : "right"} />
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </>
+            )}
           </div>
         </div>
       </main>

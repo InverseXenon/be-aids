@@ -5,6 +5,36 @@ import { Trophy, Lock } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { optimizeCloudinaryUrl } from "@/lib/cloudinary-client";
+import Skeleton from "@/components/shared/Skeleton";
+
+function HallOfFameSkeleton() {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {Array.from({ length: 4 }).map((_, i) => (
+        <div key={i} className="bg-warm-sand/10 rounded-2xl p-6 border border-warm-sand/20 space-y-4">
+          <div className="flex items-center gap-2">
+            <Skeleton className="w-8 h-8 rounded-full" />
+            <Skeleton className="w-40 h-6" />
+          </div>
+          <div className="space-y-3">
+            {Array.from({ length: 3 }).map((_, j) => (
+              <div key={j} className="flex items-center gap-3">
+                <Skeleton className="w-8 h-8 rounded-full" />
+                <div className="flex-1 space-y-2">
+                  <div className="flex justify-between">
+                    <Skeleton className="w-24 h-4" />
+                    <Skeleton className="w-8 h-4" />
+                  </div>
+                  <Skeleton className="w-full h-2 rounded-full" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 function getSessionId() {
   if (typeof window === "undefined") return "";
@@ -107,12 +137,17 @@ function VotingCard({ category, onVote }) {
 
 export default function HallOfFamePage() {
   const [categories, setCategories] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const loadCategories = () => {
+    setIsLoading(true);
     fetch("/api/superlatives?results=true")
       .then((r) => r.json())
-      .then(setCategories)
-      .catch(() => {});
+      .then((data) => {
+        setCategories(data);
+        setIsLoading(false);
+      })
+      .catch(() => setIsLoading(false));
   };
 
   useEffect(() => {
@@ -134,9 +169,13 @@ export default function HallOfFamePage() {
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {categories.map((cat) => (
-              <VotingCard key={cat._id} category={cat} onVote={loadCategories} />
-            ))}
+            {isLoading ? (
+              <HallOfFameSkeleton />
+            ) : (
+              categories.map((cat) => (
+                <VotingCard key={cat._id} category={cat} onVote={loadCategories} />
+              ))
+            )}
           </div>
 
           {categories.length === 0 && (

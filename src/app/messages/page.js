@@ -4,6 +4,29 @@ import { motion } from "framer-motion";
 import { Send } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import Skeleton from "@/components/shared/Skeleton";
+
+function MessageSkeleton() {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      {Array.from({ length: 8 }).map((_, i) => {
+        const rotation = (i % 7) - 3;
+        return (
+          <div 
+            key={i} 
+            className="bg-warm-sand/10 rounded-sm p-5 border border-warm-sand/20 min-h-[140px] space-y-3"
+            style={{ transform: `rotate(${rotation}deg)` }}
+          >
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-5/6" />
+            <Skeleton className="h-4 w-4/6" />
+            <Skeleton className="h-3 w-1/4 mt-4" />
+          </div>
+        );
+      })}
+    </div>
+  );
+}
 
 const stickyColors = {
   lemon: "bg-sticky-lemon",
@@ -44,12 +67,17 @@ export default function MessagesPage() {
   const [messages, setMessages] = useState([]);
   const [form, setForm] = useState({ author: "", content: "", color: "lemon" });
   const [submitted, setSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    setIsLoading(true);
     fetch("/api/messages")
       .then((r) => r.json())
-      .then(setMessages)
-      .catch(() => {});
+      .then((data) => {
+        setMessages(data);
+        setIsLoading(false);
+      })
+      .catch(() => setIsLoading(false));
   }, []);
 
   const handleSubmit = async (e) => {
@@ -135,11 +163,15 @@ export default function MessagesPage() {
           </motion.div>
 
           {/* Corkboard */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {messages.map((msg, i) => (
-              <StickyNote key={msg._id} message={msg} index={i} />
-            ))}
-          </div>
+          {isLoading ? (
+            <MessageSkeleton />
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {messages.map((msg, i) => (
+                <StickyNote key={msg._id} message={msg} index={i} />
+              ))}
+            </div>
+          )}
 
           {messages.length === 0 && (
             <p className="text-center text-deep-navy/40 py-20 font-handwriting text-xl">

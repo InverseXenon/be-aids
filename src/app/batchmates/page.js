@@ -23,6 +23,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { optimizeCloudinaryUrl } from "@/lib/cloudinary-client";
 import { useMemo } from "react";
+import Skeleton from "@/components/shared/Skeleton";
 
 const getInitials = (name) => {
   if (!name) return "?";
@@ -30,6 +31,18 @@ const getInitials = (name) => {
   if (parts.length === 1) return parts[0][0].toUpperCase();
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 };
+
+function BatchmateSkeleton() {
+  return (
+    <div className="bg-[#fcfaf2] p-4 pb-28 border border-warm-sand/30 rounded-sm flex flex-col h-[28rem] shadow-sm">
+      <Skeleton className="flex-1 rounded-none mb-4" />
+      <div className="space-y-3 px-2">
+        <Skeleton className="h-6 w-3/4 mx-auto" />
+        <Skeleton className="h-4 w-1/2 mx-auto" />
+      </div>
+    </div>
+  );
+}
 
 function ProfileCard({ batchmate, index }) {
   const [isFlipped, setIsFlipped] = useState(false);
@@ -135,14 +148,19 @@ function ProfileCard({ batchmate, index }) {
 export default function BatchmatesPage() {
   const [batchmates, setBatchmates] = useState([]);
   const [search, setSearch] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    setIsLoading(true);
     const params = new URLSearchParams();
     if (search) params.set("search", search);
     fetch(`/api/batchmates?${params}`)
       .then((r) => r.json())
-      .then(setBatchmates)
-      .catch(() => {});
+      .then((data) => {
+        setBatchmates(data);
+        setIsLoading(false);
+      })
+      .catch(() => setIsLoading(false));
   }, [search]);
 
   return (
@@ -179,9 +197,13 @@ export default function BatchmatesPage() {
 
           {/* Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            {batchmates.map((b, i) => (
-              <ProfileCard key={b._id} batchmate={b} index={i} />
-            ))}
+            {isLoading
+              ? Array.from({ length: 10 }).map((_, i) => (
+                  <BatchmateSkeleton key={i} />
+                ))
+              : batchmates.map((b, i) => (
+                  <ProfileCard key={b._id} batchmate={b} index={i} />
+                ))}
           </div>
 
           {batchmates.length === 0 && (
