@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, X, ChevronLeft, ChevronRight, Play, Upload, CheckCircle2 } from "lucide-react";
+import { Search, X, ChevronLeft, ChevronRight, Play, Upload, CheckCircle2, RotateCw } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { getSessionId, getUserName, setUserName } from "@/lib/session";
@@ -101,18 +101,38 @@ function Interactions({ targetId }) {
 }
 
 function Lightbox({ item, media, onNavigate, onClose }) {
+  const [rotation, setRotation] = useState(0);
+
+  useEffect(() => {
+    // Reset rotation when image changes
+    setRotation(0);
+
+    const handleKeyDown = (e) => {
+      if (e.key === "ArrowLeft") handlePrev(e);
+      if (e.key === "ArrowRight") handleNext(e);
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [item]);
+
   if (!item) return null;
   const currentIndex = media.findIndex(m => m._id === item._id);
   const hasPrev = currentIndex > 0;
   const hasNext = currentIndex < media.length - 1;
 
   const handlePrev = (e) => {
-    e.stopPropagation();
+    if (e) e.stopPropagation();
     if (hasPrev) onNavigate(media[currentIndex - 1]);
   };
   const handleNext = (e) => {
-    e.stopPropagation();
+    if (e) e.stopPropagation();
     if (hasNext) onNavigate(media[currentIndex + 1]);
+  };
+
+  const handleRotate = (e) => {
+    e.stopPropagation();
+    setRotation(prev => (prev + 90) % 360);
   };
 
   return (
@@ -120,40 +140,57 @@ function Lightbox({ item, media, onNavigate, onClose }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 bg-black/95 flex md:flex-row flex-col items-center justify-center p-4 gap-6"
+      className="fixed inset-0 z-50 bg-black/98 flex md:flex-row flex-col items-center justify-center p-4 gap-4 md:gap-8"
       onClick={onClose}
     >
-      <button onClick={onClose} className="absolute top-4 right-4 text-white/80 hover:text-white z-50">
-        <X size={28} />
-      </button>
+      <div className="absolute top-4 right-4 flex items-center gap-4 z-50">
+        {!item.url.includes("watch?v=") && (
+          <button onClick={handleRotate} className="text-white/60 hover:text-white transition-colors" title="Rotate Image">
+            <RotateCw size={24} />
+          </button>
+        )}
+        <button onClick={onClose} className="text-white/80 hover:text-white">
+          <X size={28} />
+        </button>
+      </div>
 
       {hasPrev && (
-        <button onClick={handlePrev} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white z-50 p-2 bg-black/50 rounded-full hover:bg-black/80 transition-all">
+        <button onClick={handlePrev} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white z-50 p-2 bg-black/50 rounded-full hover:bg-black/80 transition-all border border-white/10">
           <ChevronLeft size={32} />
         </button>
       )}
       {hasNext && (
-        <button onClick={handleNext} className="absolute right-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white z-50 p-2 bg-black/50 rounded-full hover:bg-black/80 transition-all">
+        <button onClick={handleNext} className="absolute right-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white z-50 p-2 bg-black/50 rounded-full hover:bg-black/80 transition-all border border-white/10">
           <ChevronRight size={32} />
         </button>
       )}
       
-      <div className="flex-1 flex items-center justify-center w-full max-h-[85vh]">
+      <div className="flex-1 flex items-center justify-center w-full min-h-0 relative overflow-hidden">
         {item.type === "video" ? (
           <iframe
             src={item.url.replace("watch?v=", "embed/")}
-            className="w-full max-w-4xl aspect-video rounded-lg"
+            className="w-full max-w-4xl aspect-video rounded-lg shadow-2xl"
             allowFullScreen
             onClick={(e) => e.stopPropagation()}
           />
         ) : (
-          <img src={optimizeCloudinaryUrl(item.url)} alt={item.caption || ""} className="max-h-full max-w-full object-contain rounded-lg shadow-2xl" onClick={(e) => e.stopPropagation()} />
+          <motion.img 
+            animate={{ rotate: rotation }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            src={optimizeCloudinaryUrl(item.url)} 
+            alt={item.caption || ""} 
+            className="max-h-[85vh] max-w-full object-contain rounded-lg shadow-2xl overflow-visible" 
+            onClick={(e) => e.stopPropagation()} 
+          />
         )}
       </div>
 
-      <div className="w-full md:w-80 lg:w-96 flex flex-col max-h-[85vh]" onClick={e => e.stopPropagation()}>
-        {item.caption && <p className="text-white/80 text-sm mb-4 bg-warm-sand/20 p-4 rounded-xl">{item.caption}</p>}
-        {item.eventName && <p className="text-amber-gold text-xs font-bold uppercase tracking-wider mb-2">{item.eventName}</p>}
+      <div className="w-full md:w-80 lg:w-96 flex flex-col shrink-0 max-h-[90vh] md:max-h-[85vh] bg-black/40 md:bg-transparent p-4 md:p-0 rounded-2xl overflow-hidden" onClick={e => e.stopPropagation()}>
+        <div className="overflow-y-auto pr-2 scrollbar-hide">
+          {item.caption && <p className="text-white/90 text-sm mb-4 leading-relaxed font-light">{item.caption}</p>}
+          {item.eventName && <p className="text-amber-gold text-xs font-bold uppercase tracking-widest mb-1">{item.eventName}</p>}
+          <div className="w-12 h-0.5 bg-amber-gold/30 mb-6" />
+        </div>
         <Interactions targetId={item._id} />
       </div>
     </motion.div>
