@@ -1,16 +1,10 @@
-"use client";
-import { motion } from "framer-motion";
-
+/**
+ * High-performance skeleton loading indicator.
+ * Uses pure CSS shimmer animation instead of Framer Motion
+ * to minimize JS overhead when many skeletons render simultaneously.
+ */
 export default function Skeleton({ className = "" }) {
   return (
-    <motion.div
-      animate={{ opacity: [0.5, 0.8, 0.5] }}
-      transition={{ 
-        duration: 2, 
-        repeat: Infinity, 
-        ease: "easeInOut" 
-      }}
-      className={`bg-warm-sand/20 rounded-md ${className}`}
-    />
+    <div className={`skeleton-shimmer rounded-md ${className}`} />
   );
 }

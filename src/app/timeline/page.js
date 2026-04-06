@@ -2,9 +2,10 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Calendar, Tag, X, ChevronLeft, ChevronRight } from "lucide-react";
+import Image from "next/image";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import { optimizeCloudinaryUrl } from "@/lib/cloudinary-client";
+import { optimizeCloudinaryUrl, cloudinaryLoader } from "@/lib/cloudinary-client";
 import Skeleton from "@/components/shared/Skeleton";
 
 function TimelineSkeleton() {
@@ -93,6 +94,8 @@ function EventCard({ event, side }) {
   const [lightboxIndex, setLightboxIndex] = useState(-1);
   const colors = yearColors[event.year] || yearColors[1];
 
+  const isVideo = (url) => url.includes('/video/') || url.match(/\.(mp4|webm|ogg)$/i);
+
   return (
     <>
       <motion.div
@@ -129,7 +132,7 @@ function EventCard({ event, side }) {
                   onClick={() => setLightboxIndex(i)}
                   className="w-16 h-16 rounded-lg overflow-hidden border-2 border-white/50 hover:border-amber-gold transition-colors relative bg-black/10"
                 >
-                  {(photo.url.includes('/video/') || photo.url.match(/\.(mp4|webm|ogg)$/i)) ? (
+                  {isVideo(photo.url) ? (
                     <>
                       <video src={photo.url} className="w-full h-full object-cover" />
                       <div className="absolute inset-0 flex items-center justify-center bg-black/30">
@@ -139,7 +142,15 @@ function EventCard({ event, side }) {
                       </div>
                     </>
                   ) : (
-                    <img src={optimizeCloudinaryUrl(photo.url)} alt="" className="w-full h-full object-cover" />
+                    <Image
+                      loader={cloudinaryLoader}
+                      src={photo.url}
+                      alt=""
+                      width={64}
+                      height={64}
+                      className="w-full h-full object-cover"
+                      sizes="64px"
+                    />
                   )}
                 </button>
               ))}

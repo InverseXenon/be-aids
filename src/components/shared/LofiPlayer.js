@@ -1,7 +1,7 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Music, Play, Pause, SkipForward, Volume2, VolumeX } from "lucide-react";
+import { Disc3, Play, Pause, SkipForward, Volume2, VolumeX } from "lucide-react";
 
 const TRACKS = [
   { title: "Yaariyan Reprise (ABCD) 💫", url: "/music/yaariyan.m4a" },
@@ -16,13 +16,35 @@ export default function LofiPlayer() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrack, setCurrentTrack] = useState(0);
   const [isMuted, setIsMuted] = useState(false);
+  const [progress, setProgress] = useState(0);
   const audioRef = useRef(null);
+  const rafRef = useRef(null);
 
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.volume = isMuted ? 0 : 0.3;
     }
   }, [isMuted]);
+
+  // Progress bar update loop
+  useEffect(() => {
+    const updateProgress = () => {
+      if (audioRef.current && audioRef.current.duration) {
+        setProgress((audioRef.current.currentTime / audioRef.current.duration) * 100);
+      }
+      rafRef.current = requestAnimationFrame(updateProgress);
+    };
+
+    if (isPlaying) {
+      rafRef.current = requestAnimationFrame(updateProgress);
+    } else {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    }
+
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, [isPlaying]);
 
   // Attempt Autoplay on first render
   useEffect(() => {
@@ -53,6 +75,7 @@ export default function LofiPlayer() {
   const nextTrack = () => {
     const next = (currentTrack + 1) % TRACKS.length;
     setCurrentTrack(next);
+    setProgress(0);
     if (isPlaying) {
       setTimeout(() => {
         audioRef.current.play().catch(() => setIsPlaying(false));
@@ -78,9 +101,17 @@ export default function LofiPlayer() {
             opacity: isOpen ? 1 : 0,
             marginLeft: isOpen ? 16 : 0
           }}
-          className="bg-deep-navy/90 backdrop-blur-md rounded-2xl overflow-hidden shadow-2xl flex items-center h-16 origin-left overflow-x-hidden whitespace-nowrap"
+          className="bg-deep-navy/90 backdrop-blur-md rounded-2xl overflow-hidden shadow-2xl flex flex-col h-[76px] origin-left overflow-x-hidden whitespace-nowrap"
         >
-          <div className="px-4 flex items-center justify-between w-full min-w-[280px]">
+          {/* Mini progress bar at top */}
+          <div className="w-full h-1 bg-warm-sand/10 shrink-0">
+            <div 
+              className="h-full bg-amber-gold/70 transition-[width] duration-200 ease-linear rounded-r-full"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+
+          <div className="px-4 flex items-center justify-between w-full min-w-[280px] flex-1">
             <div className="flex flex-col">
               <span className="text-amber-gold text-[10px] uppercase tracking-wider font-bold">Now Playing</span>
               <span className="text-parchment text-sm font-medium pr-4 truncate w-32">{TRACKS[currentTrack].title}</span>
@@ -105,7 +136,12 @@ export default function LofiPlayer() {
           className={`shrink-0 w-14 h-14 rounded-full shadow-xl flex items-center justify-center transition-all duration-500 ease-out z-10 ${isPlaying ? 'bg-amber-gold text-deep-navy' : 'bg-archive-navy text-parchment'}`}
         >
           <div className="relative">
-             <Music size={20} className={isPlaying ? 'animate-pulse' : ''} />
+             <motion.div
+               animate={{ rotate: isPlaying ? 360 : 0 }}
+               transition={{ repeat: isPlaying ? Infinity : 0, duration: 3, ease: "linear" }}
+             >
+               <Disc3 size={20} />
+             </motion.div>
              {isPlaying && (
                <div className="absolute -top-1 -right-1 flex gap-0.5 items-end h-3">
                  <div className="w-0.5 bg-deep-navy animate-bounce h-2" style={{ animationDelay: '0ms' }} />

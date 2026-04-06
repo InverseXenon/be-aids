@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { ChevronLeft, ChevronRight, Download } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import { optimizeCloudinaryUrl, getThumbnailUrl } from "@/lib/cloudinary-client";
 
 const HTMLFlipBook = dynamic(() => import("react-pageflip").then((mod) => mod.default), {
   ssr: false,
@@ -114,14 +115,19 @@ export default function YearbookPage() {
                   {/* Cover */}
                   <Page><CoverPage /></Page>
 
-                  {/* Class Photo page */}
+                  {/* Class Photo page — use plain img with Cloudinary thumbnail optimization */}
                   <Page>
                     <h2 className="font-serif text-2xl text-deep-navy mb-6">Our Class 📸</h2>
                     <div className="grid grid-cols-6 gap-1">
                       {batchmates.slice(0, 48).map((b) => (
                         <div key={b._id} className="aspect-square bg-warm-sand/50 rounded overflow-hidden">
                           {b.photo?.url ? (
-                            <img src={b.photo.url} alt={b.name} className="w-full h-full object-cover" />
+                            <img
+                              src={getThumbnailUrl(b.photo.url, 80)}
+                              alt={b.name}
+                              className="w-full h-full object-cover"
+                              loading="eager"
+                            />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center text-[10px] text-deep-navy/30">
                               {b.name?.[0]}
@@ -133,13 +139,18 @@ export default function YearbookPage() {
                     <p className="mt-4 text-xs text-deep-navy/30 text-center">Batch of &apos;26</p>
                   </Page>
 
-                  {/* Individual student pages */}
+                  {/* Individual student pages — plain img to avoid react-pageflip conflicts */}
                   {batchmates.map((b) => (
                     <Page key={b._id}>
                       <div className="flex flex-col items-center text-center h-full justify-center">
                         <div className="w-28 h-28 rounded-full overflow-hidden bg-warm-sand/50 mb-4 border-2 border-amber-gold/30">
                           {b.photo?.url ? (
-                            <img src={b.photo.url} alt={b.name} className="w-full h-full object-cover" />
+                            <img
+                              src={getThumbnailUrl(b.photo.url, 224)}
+                              alt={b.name}
+                              className="w-full h-full object-cover"
+                              loading="lazy"
+                            />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center text-2xl text-deep-navy/20">
                               {b.name?.[0]}

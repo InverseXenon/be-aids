@@ -2,9 +2,10 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Trophy, Lock } from "lucide-react";
+import Image from "next/image";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import { optimizeCloudinaryUrl } from "@/lib/cloudinary-client";
+import { cloudinaryLoader } from "@/lib/cloudinary-client";
 import Skeleton from "@/components/shared/Skeleton";
 
 function HallOfFameSkeleton() {
@@ -94,9 +95,17 @@ function VotingCard({ category, onVote }) {
         <div className="space-y-2 mb-4">
           {category.results.slice(0, 5).map((r, i) => (
             <div key={i} className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-warm-sand/50 overflow-hidden flex-shrink-0">
+              <div className="w-8 h-8 rounded-full bg-warm-sand/50 overflow-hidden flex-shrink-0 relative">
                 {r.batchmate?.photo?.url ? (
-                  <img src={optimizeCloudinaryUrl(r.batchmate.photo.url)} alt="" className="w-full h-full object-cover" />
+                  <Image
+                    loader={cloudinaryLoader}
+                    src={r.batchmate.photo.url}
+                    alt=""
+                    width={32}
+                    height={32}
+                    className="w-full h-full object-cover"
+                    sizes="32px"
+                  />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-xs text-deep-navy/30">
                     {r.batchmate?.name?.[0]}

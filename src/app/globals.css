@@ -79,6 +79,8 @@
   }
 }
 
+/* ── Core Animations ── */
+
 @keyframes float {
   0% { transform: translateY(0px) rotate(0deg); }
   50% { transform: translateY(-20px) rotate(2deg); }
@@ -100,6 +102,92 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* ── Shimmer Skeleton (pure CSS, no JS overhead) ── */
+
+@keyframes shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--warm-sand, #EAE3D2) 0%,
+    rgba(255, 255, 255, 0.15) 40%,
+    rgba(255, 255, 255, 0.15) 60%,
+    var(--warm-sand, #EAE3D2) 100%
+  );
+  background-color: var(--warm-sand, #EAE3D2);
+  opacity: 0.2;
+  background-size: 800px 100%;
+  animation: shimmer 1.8s ease-in-out infinite;
+}
+
+.dark .skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--warm-sand, #27272a) 0%,
+    rgba(255, 255, 255, 0.06) 40%,
+    rgba(255, 255, 255, 0.06) 60%,
+    var(--warm-sand, #27272a) 100%
+  );
+  background-color: var(--warm-sand, #27272a);
+  opacity: 0.3;
+  background-size: 800px 100%;
+}
+
+/* ── Infinite Marquee ── */
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.marquee-track {
+  display: flex;
+  animation: marquee 40s linear infinite;
+  will-change: transform;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+/* ── Heartbeat animation for Footer ── */
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  15% { transform: scale(1.25); }
+  30% { transform: scale(1); }
+  45% { transform: scale(1.15); }
+  60% { transform: scale(1); }
+}
+
+.animate-heartbeat {
+  animation: heartbeat 2s ease-in-out infinite;
+  display: inline-flex;
+}
+
+/* ── Vinyl Spin for LofiPlayer ── */
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 3s linear infinite;
+}
+
+/* ── Progress Bar Glow ── */
+
+@keyframes progress-glow {
+  0%, 100% { box-shadow: 0 0 4px rgba(245, 158, 11, 0.3); }
+  50% { box-shadow: 0 0 8px rgba(245, 158, 11, 0.6); }
+}
+
+/* ── Base Styles ── */
+
 body {
   background-color: var(--background);
   color: var(--foreground);
@@ -115,6 +203,8 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-handwriting), cursive;
 }
 
+/* ── Texture Overlay ── */
+
 .texture-overlay {
   position: fixed;
   top: 0;
@@ -127,7 +217,50 @@ h1, h2, h3, h4, h5, h6 {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
+/* ── Scrollbar — Light Mode ── */
+
 ::-webkit-scrollbar { width: 10px; }
 ::-webkit-scrollbar-track { background: var(--color-parchment); }
-::-webkit-scrollbar-thumb { background: var(--color-warm-sand); border-radius: 5px; }
+::-webkit-scrollbar-thumb { 
+  background: var(--color-warm-sand); 
+  border-radius: 5px; 
+  border: 2px solid var(--color-parchment);
+}
 ::-webkit-scrollbar-thumb:hover { background: var(--color-amber-gold); }
+
+/* ── Scrollbar — Dark Mode ── */
+
+.dark ::-webkit-scrollbar-track { background: #09090b; }
+.dark ::-webkit-scrollbar-thumb { 
+  background: #3f3f46; 
+  border-color: #09090b;
+}
+.dark ::-webkit-scrollbar-thumb:hover { background: #f59e0b; }
+
+/* ── GPU Hints for animated elements ── */
+
+.will-change-transform {
+  will-change: transform;
+}
+
+/* ── Reduced Motion ── */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .marquee-track {
+    animation: none !important;
+  }
+}
+
+/* ── Scrollbar hide utility ── */
+
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }

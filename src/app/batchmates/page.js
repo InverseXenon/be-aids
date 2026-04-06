@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Search } from "lucide-react";
+import Image from "next/image";
 
 // Inline SVGs for social icons to fix build error
 const Linkedin = ({ size = 16, className = "" }) => (
@@ -21,7 +22,7 @@ const Instagram = ({ size = 16, className = "" }) => (
 );
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import { optimizeCloudinaryUrl } from "@/lib/cloudinary-client";
+import { cloudinaryLoader } from "@/lib/cloudinary-client";
 import { useMemo } from "react";
 import Skeleton from "@/components/shared/Skeleton";
 
@@ -53,7 +54,7 @@ function ProfileCard({ batchmate, index }) {
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ delay: index * 0.03, duration: 0.5 }}
+      transition={{ delay: Math.min(index, 10) * 0.03, duration: 0.5 }}
       style={{ rotate: rotation }}
       className="group relative h-[32rem] cursor-pointer [perspective:1000px]"
       onMouseEnter={() => setIsFlipped(true)}
@@ -72,10 +73,13 @@ function ProfileCard({ batchmate, index }) {
           
           <div className="flex-1 bg-[#1a1a1b] overflow-hidden relative shadow-inner ring-1 ring-black/10">
             {batchmate.photo?.url ? (
-              <img
-                src={optimizeCloudinaryUrl(batchmate.photo.url)}
+              <Image
+                loader={cloudinaryLoader}
+                src={batchmate.photo.url}
                 alt={batchmate.name}
-                className="w-full h-full object-cover filter contrast-[1.02] saturate-[0.95] brightness-[1.02]"
+                fill
+                className="object-cover filter contrast-[1.02] saturate-[0.95] brightness-[1.02]"
+                sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center text-5xl font-bold text-white/20 bg-gradient-to-br from-deep-navy via-archive-navy to-deep-navy">

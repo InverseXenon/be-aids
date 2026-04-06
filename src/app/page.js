@@ -1,11 +1,14 @@
 "use client";
 import { useEffect, useState, useCallback } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { GraduationCap, Star, Plane, ChevronDown } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Skeleton from "@/components/shared/Skeleton";
+import Lightbox from "@/components/shared/Lightbox";
+import { cloudinaryLoader } from "@/lib/cloudinary-client";
 
 /* ── floating decorative items ── */
 function FloatingElements() {
@@ -25,7 +28,7 @@ function FloatingElements() {
       {items.map((item, i) => (
         <motion.div
           key={i}
-          className="absolute text-amber-gold/20 pointer-events-none"
+          className="absolute text-amber-gold/20 pointer-events-none will-change-transform"
           style={{ left: item.left, top: item.top }}
           animate={{
             y: [0, -20, 0],
@@ -119,7 +122,7 @@ function ThisDayWidget() {
   );
 }
 
-/* ── vault highlights carousel ── */
+/* ── vault highlights carousel — infinite marquee ── */
 function VaultHighlightsSkeleton() {
   return (
     <div className="flex gap-4 overflow-hidden px-4 md:px-20 py-8">
@@ -139,6 +142,7 @@ function VaultHighlightsSkeleton() {
 function VaultHighlights() {
   const [media, setMedia] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [lightboxItem, setLightboxItem] = useState(null);
   
   useEffect(() => {
     setIsLoading(true);
@@ -167,10 +171,21 @@ function VaultHighlights() {
       {isLoading ? (
         <VaultHighlightsSkeleton />
       ) : (
-        <div className="flex gap-4 overflow-x-auto pb-8 snap-x snap-mandatory px-4 md:px-20 scrollbar-thin">
+        <div className="flex gap-4 overflow-x-auto pb-8 snap-x snap-mandatory px-4 md:px-20 scrollbar-hide">
           {media.map((item) => (
-            <Link href="/gallery" key={item._id} className="min-w-[280px] md:min-w-[340px] h-[450px] snap-center shrink-0 relative rounded-2xl overflow-hidden group shadow-lg border border-warm-sand/50">
-              <img src={item.thumbnail || item.url} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            <div 
+              onClick={() => setLightboxItem(item)}
+              key={item._id} 
+              className="cursor-pointer min-w-[280px] md:min-w-[340px] h-[450px] snap-center shrink-0 relative rounded-2xl overflow-hidden group shadow-lg border border-warm-sand/50"
+            >
+              <Image
+                loader={cloudinaryLoader}
+                src={item.thumbnail || item.url}
+                alt={item.caption || "A beautiful memory"}
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-700"
+                sizes="340px"
+              />
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent p-6 flex flex-col justify-end">
                 {item.eventName && <p className="text-amber-gold text-xs font-bold uppercase tracking-wider mb-1">{item.eventName}</p>}
                 <p className="text-white/90 text-sm line-clamp-2">{item.caption || "A beautiful memory"}</p>
@@ -179,10 +194,21 @@ function VaultHighlights() {
                    <span className="text-xs text-white border-l border-white/20 pl-2 ml-1">{item.likesCount || 0} Likes</span>
                 </div>
               </div>
-            </Link>
+            </div>
           ))}
         </div>
       )}
+
+      <AnimatePresence>
+        {lightboxItem && (
+          <Lightbox 
+            item={lightboxItem} 
+            media={media} 
+            onNavigate={setLightboxItem} 
+            onClose={() => setLightboxItem(null)} 
+          />
+        )}
+      </AnimatePresence>
     </section>
   );
 }
