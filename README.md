@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🎓 BE AIDS Digital Yearbook
 
-## Getting Started
+> A premium, highly interactive digital yearbook crafted to immortalize the memories, batchmates, and legacy of the BE AIDS (Batch '26). 
 
-First, run the development server:
+This project aims to re-create the nostalgic feeling of flipping through a physical college yearbook while upgrading it with modern, interactive digital features. Built for performance, beauty, and emotional resonance.
 
+---
+
+## ✨ Core Features
+
+* **📖 Interactive Flipping Yearbook:** A highly optimized digital flipbook module allowing you to smoothly flip through batchmate portraits and bios just like a real book.
+* **🎵 Native Ambient Lofi Player:** A custom-built music player featuring an animated spinning vinyl, allowing users to listen to retro/lofi beats while browsing their memories.
+* **📸 The Vault (Media Gallery):** An optimized infinite-scrolling gallery using Cloudinary. Clicking on any highlighted memory opens a cinematic Lightbox experience with social interactions (likes & comments).
+* **🏆 Hall of Fame (Superlatives):** A dedicated, interactive voting and showcase module honoring class superlatives.
+* **💬 Real-Time Interactions & Comments:** Seamless interactions that let batchmates react and drop comments instantly on specific timeline events or photos.
+* **✨ Premium Glassmorphic UI:** Smooth Framer Motion micro-animations, gorgeous gradients, and a heavily customized Tailwind CSS v4 design system.
+
+---
+
+## 🛠️ Tech Stack
+
+* **Framework:** [Next.js 16](https://nextjs.org/) (App Router & Server Actions)
+* **Library:** [React 19](https://react.dev/)
+* **Styling:** [Tailwind CSS v4](https://tailwindcss.com/)
+* **Animations:** [Framer Motion](https://www.framer.com/motion/)
+* **Database:** [MongoDB](https://www.mongodb.com/) via Mongoose
+* **Image Delivery:** [Cloudinary](https://cloudinary.com/) (AVIF/WebP Auto-Format & Resizing)
+* **Icons:** [Lucide-React](https://lucide.dev/)
+
+---
+
+## 🚀 Getting Started
+
+To run this project locally, make sure you have **Node.js** installed, then follow these steps:
+
+### 1. Clone the repository
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/InverseXenon/be-aids.git
+cd be-aids
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Install Dependencies
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+### 3. Environment Variables
+You will need to create a `.env.local` file at the root of the project to connect to the necessary services. 
+```env
+MONGODB_URI=your_mongodb_connection_string
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+NEXTAUTH_SECRET=your_auth_secret
+NEXTAUTH_URL=http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 4. Run the Development Server
+```bash
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) in your browser to experience the yearbook.
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 🏎️ Production Performance optimizations
+This web application takes full advantage of Next.js static asset caching and edge networks.
+* **Zero Layout Shift:** Native `next/image` handles loader configurations straight from Cloudinary for predictive dimensions.
+* **Opt-in Standalone Build:** The application is packed via Turbopack to output an isolated `standalone` footprint for Vercel/Docker serverless executions.
+* **GPU Accelerated Effects:** Complex animations (`will-change-transform`, spinning disks) are outsourced heavily to CSS layers so the JavaScript main thread stays untouched.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+*Crafted with ❤️ for the finest moments of our lives.*
