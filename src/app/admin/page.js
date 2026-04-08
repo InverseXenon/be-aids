@@ -6,7 +6,7 @@ import { signOut } from "next-auth/react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import {
-  Calendar, Users, Image, MessageSquare, Trophy, FolderOpen, LogOut, Shield,
+  Calendar, Users, Image, MessageSquare, Trophy, FolderOpen, LogOut, Shield, Gamepad2,
 } from "lucide-react";
 
 const sections = [
@@ -15,6 +15,7 @@ const sections = [
   { href: "/admin/gallery", label: "Media Vault", icon: Image, color: "bg-sticky-mint", desc: "Upload photos & videos" },
   { href: "/admin/messages", label: "Messages", icon: MessageSquare, color: "bg-sticky-lemon", desc: "Moderate sticky notes" },
   { href: "/admin/hall-of-fame", label: "Hall of Fame", icon: Trophy, color: "bg-sticky-peach", desc: "Manage voting categories" },
+  { href: "/admin/game", label: "Live Polling Game", icon: Gamepad2, color: "bg-sticky-lavender", desc: "Who Is Most Likely To...?" },
 ];
 
 export default function AdminDashboard() {

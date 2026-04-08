@@ -1,5 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { Disc3, Play, Pause, SkipForward, Volume2, VolumeX } from "lucide-react";
 
@@ -12,6 +13,7 @@ const TRACKS = [
 ];
 
 export default function LofiPlayer() {
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrack, setCurrentTrack] = useState(0);
@@ -19,6 +21,9 @@ export default function LofiPlayer() {
   const [progress, setProgress] = useState(0);
   const audioRef = useRef(null);
   const rafRef = useRef(null);
+
+  // Hide the player completely on game-related routes
+  const isGameRoute = pathname?.includes('/game');
 
   useEffect(() => {
     if (audioRef.current) {
@@ -82,6 +87,8 @@ export default function LofiPlayer() {
       }, 50);
     }
   };
+
+  if (isGameRoute) return null;
 
   return (
     <>

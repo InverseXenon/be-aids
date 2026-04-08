@@ -1,8 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Trophy, Lock } from "lucide-react";
+import { Trophy, Lock, Gamepad2, ArrowRight } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { cloudinaryLoader } from "@/lib/cloudinary-client";
@@ -147,6 +148,7 @@ function VotingCard({ category, onVote }) {
 export default function HallOfFamePage() {
   const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [liveGame, setLiveGame] = useState(false);
 
   const loadCategories = () => {
     setIsLoading(true);
@@ -159,6 +161,14 @@ export default function HallOfFamePage() {
       .catch(() => setIsLoading(false));
   };
 
+  // Check if there's a live game
+  useEffect(() => {
+    fetch("/api/game")
+      .then((r) => r.json())
+      .then((data) => setLiveGame(data.active))
+      .catch(() => {});
+  }, []);
+
   useEffect(() => {
     loadCategories();
   }, []);
@@ -168,6 +178,41 @@ export default function HallOfFamePage() {
       <Navbar />
       <main className="flex-1 pt-20 pb-16">
         <div className="max-w-4xl mx-auto px-4">
+          {/* Live Game Banner */}
+          {liveGame && (
+            <motion.div
+              initial={{ opacity: 0, y: -10, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              className="mb-8"
+            >
+              <Link
+                href="/hall-of-fame/game"
+                className="block bg-gradient-to-r from-amber-500/10 via-purple-500/10 to-amber-500/10 border border-amber-400/20 rounded-2xl p-5 hover:border-amber-400/40 transition-all group"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <motion.div
+                      animate={{ scale: [1, 1.2, 1] }}
+                      transition={{ duration: 1.5, repeat: Infinity }}
+                      className="w-10 h-10 bg-amber-400/20 rounded-full flex items-center justify-center"
+                    >
+                      <Gamepad2 className="text-amber-400" size={20} />
+                    </motion.div>
+                    <div>
+                      <h3 className="font-serif text-lg text-deep-navy font-semibold flex items-center gap-2">
+                        🔴 Live Game Active!
+                      </h3>
+                      <p className="text-deep-navy/50 text-sm">
+                        Join &quot;Who Is Most Likely To...?&quot; — tap to play!
+                      </p>
+                    </div>
+                  </div>
+                  <ArrowRight className="text-amber-400 group-hover:translate-x-1 transition-transform" size={20} />
+                </div>
+              </Link>
+            </motion.div>
+          )}
+
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
             <h1 className="font-serif text-4xl md:text-5xl text-deep-navy mb-3">
               Hall of Fame 🏆
