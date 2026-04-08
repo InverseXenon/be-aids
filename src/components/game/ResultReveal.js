@@ -133,19 +133,28 @@ export default function ResultReveal({ winner, question, voteResults, totalVotes
           transition={{ type: "spring", stiffness: 100, damping: 12, delay: 0.1 }}
           className="relative mb-6"
         >
-          {/* Glow ring */}
+          {/* Insane Glow ring */}
           <motion.div
-            animate={{ scale: [1, 1.1, 1], opacity: [0.5, 0.8, 0.5] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="absolute -inset-3 rounded-full border-2 border-amber-400/30"
+            animate={{ scale: [1, 1.8, 1], opacity: [0, 0.4, 0], rotate: [0, 180] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute -inset-10 rounded-full bg-gradient-to-tr from-amber-500/40 via-yellow-300/20 to-purple-500/40 blur-[40px]"
           />
           <motion.div
-            animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
-            transition={{ duration: 2, repeat: Infinity, delay: 0.3 }}
-            className="absolute -inset-6 rounded-full border border-amber-400/15"
+            animate={{ scale: [1, 1.1, 1], opacity: [0.6, 1, 0.6] }}
+            transition={{ duration: 2, repeat: Infinity }}
+            className="absolute -inset-4 rounded-full border-2 border-amber-300/40"
+          />
+          <motion.div
+            animate={{ scale: [1, 1.25, 1], opacity: [0.3, 0.6, 0.3] }}
+            transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+            className="absolute -inset-8 rounded-full border border-amber-400/20"
           />
 
-          <div className="w-36 h-36 sm:w-44 sm:h-44 rounded-full overflow-hidden ring-4 ring-amber-400/60 shadow-[0_0_60px_rgba(245,158,11,0.3)]">
+          <motion.div 
+            animate={{ y: [-8, 8, -8] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            className="w-36 h-36 sm:w-48 sm:h-48 rounded-full overflow-hidden ring-4 ring-amber-400/80 shadow-[0_0_80px_rgba(245,158,11,0.5)] relative z-10"
+          >
             {winner?.photo?.url ? (
               <Image
                 loader={cloudinaryLoader}
@@ -162,14 +171,15 @@ export default function ResultReveal({ winner, question, voteResults, totalVotes
                 {winner?.name?.[0]?.toUpperCase() || "?"}
               </div>
             )}
-          </div>
+          </motion.div>
 
           {/* Trophy badge */}
           <motion.div
-            initial={{ scale: 0 }}
-            animate={phase >= 2 ? { scale: 1 } : { scale: 0 }}
-            transition={{ type: "spring", stiffness: 300, damping: 15, delay: 0.2 }}
-            className="absolute -bottom-2 -right-2 w-12 h-12 bg-gradient-to-br from-amber-400 to-amber-600 rounded-full flex items-center justify-center text-2xl shadow-lg"
+            initial={{ scale: 0, rotate: -45 }}
+            animate={phase >= 2 ? { scale: 1, rotate: 0 } : { scale: 0, rotate: -45 }}
+            whileHover={{ scale: 1.2, rotate: 15 }}
+            transition={{ type: "spring", stiffness: 300, damping: 12, delay: 0.4 }}
+            className="absolute -bottom-4 -right-4 w-16 h-16 bg-gradient-to-br from-yellow-300 via-amber-500 to-amber-700 rounded-full flex items-center justify-center text-3xl shadow-[0_0_30px_rgba(245,158,11,0.6)] z-20 border-2 border-yellow-200/50"
           >
             🏆
           </motion.div>

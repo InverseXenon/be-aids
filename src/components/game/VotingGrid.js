@@ -77,18 +77,33 @@ export default function VotingGrid({ question, batchmates, onVote, disabled }) {
             {filtered.map((b, i) => (
               <motion.button
                 key={b._id}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ delay: Math.min(i, 12) * 0.02 }}
+                initial={{ opacity: 0, scale: 0.8, y: 30 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.8, y: 20 }}
+                whileHover={!disabled ? { scale: 1.08, y: -4, zIndex: 10 } : {}}
+                whileTap={!disabled ? { scale: 0.92 } : {}}
+                transition={{ 
+                  delay: Math.min(i, 20) * 0.03,
+                  type: "spring", stiffness: 400, damping: 20 
+                }}
                 onClick={() => !disabled && setSelectedId(b._id)}
                 disabled={disabled}
-                className={`relative flex flex-col items-center p-2 pt-3 rounded-xl transition-all duration-200 ${
+                className={`relative flex flex-col items-center p-2 pt-3 rounded-2xl transition-colors duration-300 ${
                   selectedId === b._id
-                    ? "bg-amber-400/20 border-2 border-amber-400 shadow-[0_0_20px_rgba(245,158,11,0.2)]"
-                    : "bg-white/[0.03] border border-white/[0.06] hover:bg-white/[0.06] hover:border-white/10"
+                    ? "bg-amber-400/10 border-transparent z-10"
+                    : "bg-white/[0.02] border border-white/[0.04] hover:bg-white/[0.08]"
                 } ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
               >
+                {/* Selected animated pulsing ring */}
+                {selectedId === b._id && (
+                  <motion.div
+                    className="absolute inset-0 rounded-2xl border-2 border-amber-400 pointer-events-none"
+                    animate={{ 
+                      boxShadow: ["0 0 10px rgba(245,158,11,0)", "0 0 30px rgba(245,158,11,0.5)", "0 0 10px rgba(245,158,11,0)"] 
+                    }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                  />
+                )}
                 {/* Selection checkmark */}
                 {selectedId === b._id && (
                   <motion.div
