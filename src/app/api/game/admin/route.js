@@ -104,6 +104,12 @@ export async function POST(request) {
         { $group: { _id: "$batchmateId", count: { $sum: 1 } } },
         { $sort: { count: -1 } },
       ]);
+      
+      // Strict JS tie-breaker sort to guarantee determinism
+      votes.sort((a, b) => {
+        if (b.count !== a.count) return b.count - a.count;
+        return a._id.toString().localeCompare(b._id.toString());
+      });
 
       const totalVotes = votes.reduce((sum, v) => sum + v.count, 0);
       const winnerId = votes.length > 0 ? votes[0]._id : null;
@@ -185,6 +191,13 @@ export async function GET() {
       { $group: { _id: "$batchmateId", count: { $sum: 1 } } },
       { $sort: { count: -1 } },
     ]);
+    
+    // Strict JS tie-breaker sort
+    votes.sort((a, b) => {
+      if (b.count !== a.count) return b.count - a.count;
+      return a._id.toString().localeCompare(b._id.toString());
+    });
+
     totalVoters = votes.reduce((sum, v) => sum + v.count, 0);
     voteCounts = await Promise.all(
       votes.map(async (v) => {

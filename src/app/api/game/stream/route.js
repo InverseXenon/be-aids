@@ -129,12 +129,18 @@ export async function GET(request) {
               state.winner = winner;
             }
 
-            const votes = await GameVote.aggregate([
+            const rawVotes = await GameVote.aggregate([
               { $match: { questionId: currentQ._id } },
               { $group: { _id: "$batchmateId", count: { $sum: 1 } } },
-              { $sort: { count: -1 } },
-              { $limit: 5 },
+              { $sort: { count: -1 } }
             ]);
+            
+            rawVotes.sort((a, b) => {
+              if (b.count !== a.count) return b.count - a.count;
+              return a._id.toString().localeCompare(b._id.toString());
+            });
+            const votes = rawVotes.slice(0, 5);
+
             const totalVotes = await GameVote.countDocuments({ questionId: currentQ._id });
             const enriched = await Promise.all(
               votes.map(async (v) => {
@@ -152,11 +158,16 @@ export async function GET(request) {
 
           // Admin gets live vote counts even during open voting
           if (isAdmin && currentQ && currentQ.status === "open") {
-            const votes = await GameVote.aggregate([
+            const rawVotes = await GameVote.aggregate([
               { $match: { questionId: currentQ._id } },
               { $group: { _id: "$batchmateId", count: { $sum: 1 } } },
               { $sort: { count: -1 } },
             ]);
+            rawVotes.sort((a, b) => {
+              if (b.count !== a.count) return b.count - a.count;
+              return a._id.toString().localeCompare(b._id.toString());
+            });
+            const votes = rawVotes;
             const totalVoters = votes.reduce((sum, v) => sum + v.count, 0);
             const enriched = await Promise.all(
               votes.map(async (v) => {

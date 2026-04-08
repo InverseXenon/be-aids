@@ -178,40 +178,48 @@ export default function HallOfFamePage() {
       <Navbar />
       <main className="flex-1 pt-20 pb-16">
         <div className="max-w-4xl mx-auto px-4">
-          {/* Live Game Banner */}
-          {liveGame && (
-            <motion.div
-              initial={{ opacity: 0, y: -10, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              className="mb-8"
+          {/* Live Game Teaser / Banner */}
+          <motion.div
+            initial={{ opacity: 0, y: -10, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            className="mb-8"
+          >
+            <Link
+              href="/hall-of-fame/game"
+              className={`block border rounded-2xl p-5 transition-all group ${
+                liveGame 
+                  ? "bg-gradient-to-r from-amber-500/10 via-purple-500/10 to-amber-500/10 border-amber-400/30 hover:border-amber-400/60 shadow-[0_0_20px_rgba(245,158,11,0.1)]" 
+                  : "bg-warm-sand/20 border-warm-sand/40 hover:border-warm-sand/80"
+              }`}
             >
-              <Link
-                href="/hall-of-fame/game"
-                className="block bg-gradient-to-r from-amber-500/10 via-purple-500/10 to-amber-500/10 border border-amber-400/20 rounded-2xl p-5 hover:border-amber-400/40 transition-all group"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <motion.div
-                      animate={{ scale: [1, 1.2, 1] }}
-                      transition={{ duration: 1.5, repeat: Infinity }}
-                      className="w-10 h-10 bg-amber-400/20 rounded-full flex items-center justify-center"
-                    >
-                      <Gamepad2 className="text-amber-400" size={20} />
-                    </motion.div>
-                    <div>
-                      <h3 className="font-serif text-lg text-deep-navy font-semibold flex items-center gap-2">
-                        🔴 Live Game Active!
-                      </h3>
-                      <p className="text-deep-navy/50 text-sm">
-                        Join &quot;Who Is Most Likely To...?&quot; — tap to play!
-                      </p>
-                    </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <motion.div
+                    animate={liveGame ? { scale: [1, 1.2, 1] } : {}}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                    className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 ${
+                      liveGame ? "bg-amber-400/20 text-amber-500" : "bg-deep-navy/5 text-deep-navy/40"
+                    }`}
+                  >
+                    <Gamepad2 size={24} />
+                  </motion.div>
+                  <div>
+                    <h3 className="font-serif text-lg md:text-xl text-deep-navy font-semibold flex items-center gap-2">
+                      {liveGame ? "🔴 Live Game Is Active!" : "Live Multiplayer Game ⏳"}
+                    </h3>
+                    <p className="text-deep-navy/60 text-sm mt-0.5">
+                      {liveGame 
+                        ? "Join \"Who Is Most Likely To...?\" right now — tap to play!" 
+                        : "\"Who Is Most Likely To...?\" will be hosted live later tonight. Stay tuned!"}
+                    </p>
                   </div>
-                  <ArrowRight className="text-amber-400 group-hover:translate-x-1 transition-transform" size={20} />
                 </div>
-              </Link>
-            </motion.div>
-          )}
+                <div className={`shrink-0 ml-4 p-2 rounded-full ${liveGame ? 'bg-amber-400/20 text-amber-600' : 'bg-warm-sand w-8 h-8 flex items-center justify-center text-deep-navy'}`}>
+                  <ArrowRight className="group-hover:translate-x-1 transition-transform" size={18} />
+                </div>
+              </div>
+            </Link>
+          </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
             <h1 className="font-serif text-4xl md:text-5xl text-deep-navy mb-3">
