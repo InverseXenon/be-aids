@@ -1,18 +1,22 @@
 "use client";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Gamepad2, ArrowRight, Zap } from "lucide-react";
+import { Gamepad2, ArrowRight, Zap, Trophy } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 
 export default function HallOfFamePage() {
   const [liveGame, setLiveGame] = useState(false);
+  const [gameStatus, setGameStatus] = useState(null);
 
   useEffect(() => {
     fetch("/api/game")
       .then((r) => r.json())
-      .then((data) => setLiveGame(data.active))
+      .then((data) => {
+        setLiveGame(data.active);
+        setGameStatus(data.gameStatus || null);
+      })
       .catch(() => {});
   }, []);
 
@@ -91,6 +95,32 @@ export default function HallOfFamePage() {
               </div>
             </Link>
           </motion.div>
+
+          {/* Past results link — shown when game has ended */}
+          {gameStatus === "ended" && (
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="mt-6"
+            >
+              <Link
+                href="/hall-of-fame/game"
+                className="flex items-center justify-between gap-4 p-5 rounded-2xl border border-warm-sand/50 bg-warm-sand/10 hover:bg-warm-sand/20 transition-all group"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-amber-400/15 text-amber-500 flex items-center justify-center shrink-0">
+                    <Trophy size={20} />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-deep-navy text-sm">Game Results</p>
+                    <p className="text-deep-navy/50 text-xs">See who won each round 🏆</p>
+                  </div>
+                </div>
+                <ArrowRight size={18} className="text-deep-navy/40 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </motion.div>
+          )}
         </div>
       </main>
       <Footer />

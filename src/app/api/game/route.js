@@ -11,14 +11,13 @@ import Batchmate from "@/models/Batchmate";
 export async function GET() {
   await dbConnect();
 
-  const game = await Game.findOne({ status: { $ne: "ended" } })
-    .sort({ createdAt: -1 })
-    .lean();
+  const game = await Game.findOne({}).sort({ createdAt: -1 }).lean();
 
   if (!game) {
     return NextResponse.json({ active: false });
   }
 
+  const isEnded = game.status === "ended";
   // Get questions in order
   const questions = await GameQuestion.find({ gameId: game._id })
     .sort({ order: 1 })
@@ -90,7 +89,8 @@ export async function GET() {
   }
 
   return NextResponse.json({
-    active: true,
+    active: !isEnded,
+    gameStatus: game.status,
     game: {
       _id: game._id,
       status: game.status,
@@ -98,15 +98,15 @@ export async function GET() {
       totalQuestions: questions.length,
       stateVersion: game.stateVersion,
     },
-    currentQuestion: currentQuestion
+    currentQuestion: !isEnded && currentQuestion
       ? {
           _id: currentQuestion._id,
           prompt: currentQuestion.prompt,
           status: currentQuestion.status,
         }
       : null,
-    winner,
-    currentVoteData,
+    winner: !isEnded ? winner : null,
+    currentVoteData: !isEnded ? currentVoteData : null,
     revealedResults,
   });
 }
