@@ -11,16 +11,19 @@ import {
 } from "lucide-react";
 
 const DEFAULT_QUESTIONS = [
-  "Who slept the most in lectures? 😴",
-  "Who had the most fake attendance? 🤡",
-  "Sabse zyada proxy kaun lagata tha? 👀",
-  "Who survived engineering purely on last-night jugaad? 🌙",
-  "Who will still say 'bhai padhai nahi hui' after getting a 9 pointer? 📚",
-  "Who is most likely to come to the reunion just for free food? 🍕",
-  "Who had a different excuse for every missed submission? 🧢",
-  "Who will get caught watching reels during a meeting at their job? 📱",
-  "Who is most likely to reply 'noted' to everything at work? 💀",
-  "Who will still be using 'bhai ye waala question aayega kya?' in life? 😂",
+  "Cheats most during exam 📝",
+  "Most nashedi 🍃",
+  "Best dancer 💃",
+  "Bhikarchott 🪙",
+  "\"Tu mera bharde, mei tujhe baadme deta\" 😂",
+  "Assignment wagera kon likhta hai ✍️",
+  "\"Chalo college khatam, ghar bhag jaate hai\" 🏃",
+  "Feku No. 1 🤥",
+  "Dil toota aashiq 💔",
+  "Andha pyaar 😍",
+  "Defaulter No. 1 🚨",
+  "Ms. D16ADB 👑",
+  "Mr. D16ADB 👑",
 ];
 
 export default function AdminGamePage() {
