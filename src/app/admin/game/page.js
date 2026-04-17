@@ -11,16 +11,16 @@ import {
 } from "lucide-react";
 
 const DEFAULT_QUESTIONS = [
-  "Who is most likely to become a CEO?",
-  "Who is most likely to win a Nobel Prize?",
-  "Who is most likely to become famous on YouTube?",
-  "Who is most likely to travel the world first?",
-  "Who is most likely to write a bestselling book?",
-  "Who is most likely to become a professor?",
-  "Who is most likely to get married first?",
-  "Who is most likely to start a unicorn startup?",
-  "Who is most likely to become a stand-up comedian?",
-  "Who is most likely to still be in touch with everyone 10 years from now?",
+  "Who slept the most in lectures? 😴",
+  "Who had the most fake attendance? 🤡",
+  "Sabse zyada proxy kaun lagata tha? 👀",
+  "Who survived engineering purely on last-night jugaad? 🌙",
+  "Who will still say 'bhai padhai nahi hui' after getting a 9 pointer? 📚",
+  "Who is most likely to come to the reunion just for free food? 🍕",
+  "Who had a different excuse for every missed submission? 🧢",
+  "Who will get caught watching reels during a meeting at their job? 📱",
+  "Who is most likely to reply 'noted' to everything at work? 💀",
+  "Who will still be using 'bhai ye waala question aayega kya?' in life? 😂",
 ];
 
 export default function AdminGamePage() {
